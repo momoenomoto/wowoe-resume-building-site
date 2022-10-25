@@ -15,7 +15,7 @@ Shoppy Shoperson is a web app that will allow users to keep track of multiple gr
 What better way to kill time than word games? Getting tired of Wordle? Try Wowoe! 
 Wowoe is a simple web-based word game that refreshes every hour with a new word or you can practice by choosing your own word. The aim of the game is to get the highest score by finding words that are most related to the word of the hour or your own chosen word. You have 5 chances to get the highest score as possible. Once you sign in, you can keep track of your hourly score trend and look at your highest record. You can also compare your record to the highest record of other players.-->
 
-Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, a meter, or a timeline. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
+Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized dynamic resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, or a meter. The resume can also be translated into various languages by choosing what language you want the resume to be displayed in. Past resumes can be saved, edited, and republished as well. 
 
 ## Data Model
 
@@ -155,7 +155,9 @@ Not logged in yet view:
 Logged in view:
 ![resume homepage logged in](documentation/resume-homepage-loggedin.JPG)
 
-/resume/auth - page for signing in or signing up
+/resume/signin - page for signing in
+
+/resume/signup - page for signing up
 
 ![resume auth](documentation/resume-auth.JPG)
 
