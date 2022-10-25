@@ -15,7 +15,7 @@ Shoppy Shoperson is a web app that will allow users to keep track of multiple gr
 What better way to kill time than word games? Getting tired of Wordle? Try Wowoe! 
 Wowoe is a simple web-based word game that refreshes every hour with a new word or you can practice by choosing your own word. The aim of the game is to get the highest score by finding words that are most related to the word of the hour or your own chosen word. You have 5 chances to get the highest score as possible. Once you sign in, you can keep track of your hourly score trend and look at your highest record. You can also compare your record to the highest record of other players.-->
 
-Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, a meter, a timeline, or free-form. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
+Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, a meter, or a timeline. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
 
 ## Data Model
 
@@ -86,7 +86,7 @@ An Example CurrentGame Document:
 ```
 -->
 
-The application will store Users, Resumes, and CurrentGame.
+The application will store Users, Resumes, and Sections.
 
 * each user will have their own resume page (via a reference)
 * a resume page can have multiple sections (via references)
@@ -98,7 +98,9 @@ An Example User:
 {
   username: "momoe",
   hash: // a password hash
+  email: // email during creation
   resumes:[] // an array of resume IDs
+  published: // id of currently published resume
   last-visited: // date of last visit 
 }
 ```
@@ -107,8 +109,11 @@ An Example Resume:
 ```javascript
 {
   id: // id of resume
-  views: // a number
-  contacts: {email:'mn2668@nyu.edu', phone:'', linkedin:'linkedin.com/momoenomoto', facebook:''} // embedded contact info
+  name: // name of resume
+  photo: // link to photo
+  title: // title of user
+  contacts: {email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info
+  last-edited: // date of last edit
   sections: [] // an Array of references to different sections
 }
 ```
@@ -122,7 +127,6 @@ An Example Section:
   data: [] // Array of strings
 }
 ```
-
 
 ## [Link to Commented First Draft Schema](db.mjs) 
 
@@ -147,7 +151,10 @@ An Example Section:
 
 /resume - page for showing my current published resume
 
+Not logged in yet view:
 ![resume homepage not logged in](documentation/resume-homepage-notloggedin.JPG)
+
+Logged in view:
 ![resume homepage logged in](documentation/resume-homepage-loggedin.JPG)
 
 /resume/auth - page for signing in or signing up
