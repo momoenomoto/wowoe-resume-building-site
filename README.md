@@ -144,17 +144,30 @@ An Example Section:
 
 ![list](documentation/list-slug.png)
 -->
-/resume/resume-id/edit - page for editing my resume
 
 /resume - page for showing my current published resume
 
-/resume/all - page for showing all of my resumes
+![resume homepage not logged in](documentation/resume-homepage-notloggedin.JPG)
+![resume homepage logged in](documentation/resume-homepage-loggedin.JPG)
 
 /resume/auth - page for signing in or signing up
 
-/resume/username - page for showing someone else' published resume
+![resume auth](documentation/resume-auth.JPG)
+
+/resume/resume-id/edit - page for editing my resume
+
+![resume editor](documentation/resume-editor.JPG)
+
+/resume/all - page for showing all of my resumes
+
+![resume all](documentation/resume-all.JPG)
 
 /resume/network - page for showing everyone else' published resumes
+
+![resume all](documentation/resume-network.JPG)
+
+/resume/username - page for showing someone else' published resume, looks the same as homepage
+
 
 ## Site map
 <!--
