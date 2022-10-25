@@ -99,9 +99,9 @@ An Example User:
   username: "momoe",
   hash: // a password hash
   email: // email during creation
-  resumes:[] // an array of resume IDs
+  lastVisited: // date of last visit 
   published: // id of currently published resume
-  last-visited: // date of last visit 
+  resumes:[] // an array of resume IDs
 }
 ```
 
@@ -109,11 +109,9 @@ An Example Resume:
 ```javascript
 {
   id: // id of resume
-  name: // name of resume
   photo: // link to photo
-  title: // title of user
-  contacts: {email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info
-  last-edited: // date of last edit
+  personalInfo: {first: 'Momoe', last: 'Nomoto', title: 'Software Engineer', email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info
+  lastEdited: // date of last edit
   sections: [] // an Array of references to different sections
 }
 ```
@@ -130,7 +128,7 @@ An Example Section:
 
 ## [Link to Commented First Draft Schema](db.mjs) 
 
-(__TODO__: create a first draft of your Schemas in db.mjs and link to it)
+<!--(__TODO__: create a first draft of your Schemas in db.mjs and link to it)-->
 
 ## Wireframes
 <!--
@@ -241,9 +239,11 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 * (6 points) Front-end framework
   * To allow front-end resume editing experience smooth
 
+9 points total out of 8 required points
+
 ## [Link to Initial Main Project File](app.mjs) 
 
-(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)
+<!--(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)-->
 
 ## Annotations / References Used
 
