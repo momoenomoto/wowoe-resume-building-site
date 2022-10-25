@@ -110,7 +110,7 @@ An Example Resume:
 {
   id: // id of resume
   photo: // link to photo
-  personalInfo: {first: 'Momoe', last: 'Nomoto', title: 'Software Engineer', email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info
+  personalInfo: {first: 'Momoe', last: 'Nomoto', title: 'Software Engineer', email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info, could add or remove attributes
   lastEdited: // date of last edit
   sections: [] // an Array of references to different sections
 }
