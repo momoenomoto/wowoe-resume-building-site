@@ -167,7 +167,9 @@ Not logged in yet view:
 Logged in view:
 ![resume homepage logged in](documentation/resume-homepage-loggedin.JPG)
 
-/resume/auth - page for signing in or signing up
+/resume/signin - page for signing in
+
+/resume/signup - page for signing up
 
 ![resume auth](documentation/resume-auth.JPG)
 
