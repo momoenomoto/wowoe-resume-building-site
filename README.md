@@ -15,7 +15,7 @@ Shoppy Shoperson is a web app that will allow users to keep track of multiple gr
 What better way to kill time than word games? Getting tired of Wordle? Try Wowoe! 
 Wowoe is a simple web-based word game that refreshes every hour with a new word or you can practice by choosing your own word. The aim of the game is to get the highest score by finding words that are most related to the word of the hour or your own chosen word. You have 5 chances to get the highest score as possible. Once you sign in, you can keep track of your hourly score trend and look at your highest record. You can also compare your record to the highest record of other players.-->
 
-Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, a meter, or a timeline. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
+Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, or text. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
 
 ## Data Model
 
@@ -101,16 +101,20 @@ An Example User:
   email: // email during creation
   lastVisited: // date of last visit 
   published: // id of currently published resume
-  resumes:[] // an array of resume IDs
+  resumes:[] // an array of resume object IDs
 }
 ```
 
 An Example Resume:
 ```javascript
 {
-  id: // id of resume
+  first: "" // first name
+  last: "" // last name
+  title: "" // title
   photo: // link to photo
-  personalInfo: {first: 'Momoe', last: 'Nomoto', title: 'Software Engineer', email:'mn2668@nyu.edu', phone:'9178160261'} // embedded contact info
+  email: ["mn2668@nyu.edu", "momoe.nomoto.mn@gmail.com"],
+  phone: [9178160261],
+  loc: "New York, NY",
   lastEdited: // date of last edit
   sections: [] // an Array of references to different sections
 }
@@ -119,10 +123,18 @@ An Example Resume:
 An Example Section:
 ```javascript
 {
-  id: // id of section
   name: // name of section
-  type: // type of section: list, timeline, tags, meter, etc
-  data: [] // Array of strings
+  subsections: [] // Array of embedded subsections
+  data: // string of data
+}
+```
+
+An Example SubSection:
+```javascript
+{
+  name: // name of subsection
+  type: // list, tags, or text
+  data: // data that will be shown
 }
 ```
 
