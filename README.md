@@ -108,6 +108,8 @@ An Example User:
 An Example Resume:
 ```javascript
 {
+  _id: // id of resume
+  name: // name of resume
   first: "" // first name
   last: "" // last name
   title: "" // title
@@ -123,6 +125,7 @@ An Example Resume:
 An Example Section:
 ```javascript
 {
+  _id: // id of section
   name: // name of section
   subsections: [] // Array of embedded subsections
   data: // string of data

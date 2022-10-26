@@ -10,6 +10,8 @@ const UserSchema = new mongoose.Schema({
 });
 
 const ResumeSchema = new mongoose.Schema({
+    _id: Schema.Types.ObjectId,
+    name: String,
     first: String,
     last: String,
     title: String,
@@ -26,6 +28,7 @@ const ResumeSchema = new mongoose.Schema({
 })
 
 const SectionSchema = new mongoose.Schema({
+    _id: Schema.Types.ObjectId,
     name: String,
     subsections: [ SubSectionSchema ],
     data: String
