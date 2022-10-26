@@ -162,6 +162,8 @@ An Example SubSection:
 ![list](documentation/list-slug.png)
 -->
 
+/ - redirect to network page
+
 /resume - page for showing my current published resume
 
 Not logged in yet view:
@@ -176,7 +178,7 @@ Logged in view:
 
 ![resume auth](documentation/resume-auth.JPG)
 
-/resume/resume-id/edit - page for editing my resume
+/resume/slug/edit - page for editing my resume
 
 ![resume editor](documentation/resume-editor.JPG)
 
