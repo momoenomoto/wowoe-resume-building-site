@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-	username: String,
-    hash: String,
-    email: String,
+	username: { type: String, required: true },
+    hash: { type: String, unique: true, required: true },
+    email: { type: String, required: true },
     lastvisited: { type: Date, default: Date.now },
     published: Schema.Types.ObjectId,
     resumes: [ {type: Schema.Types.ObjectId, ref: 'Resume'} ]
@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
 
 const ResumeSchema = new mongoose.Schema({
     _id: Schema.Types.ObjectId,
-    name: String,
+    name: { type: String, required: true },
     first: String,
     last: String,
     title: String,
