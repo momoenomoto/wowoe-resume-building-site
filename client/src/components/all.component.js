@@ -20,12 +20,20 @@ export default class AllResumes extends Component {
       currentResume: null,
       currentIndex: -1,
       search: "",
+      hover: false,
     };
   }
 
   componentDidMount() {
     this.retrieveResumes();
   }
+
+  handleMouseEnter = () => {
+    this.setState({ hover: true });
+  };
+  handleMouseLeave = () => {
+    this.setState({ hover: false });
+  };
 
   onChangeSearch(e) {
     const search = e.target.value;
@@ -154,7 +162,14 @@ export default class AllResumes extends Component {
                   style={{ display: "inline-block", position: "relative" }}
                   key={index}
                 >
-                  <Link to={"/resume/" + resume.id}>
+                  <Link
+                    to={"/resume/" + resume.id}
+                    // style={{
+                    //   color: this.state.hover ? "blue" : "black",
+                    // }}
+                    // onMouseEnter={this.handleMouseEnter}
+                    // onMouseLeave={this.handleMouseLeave}
+                  >
                     <img
                       className="block"
                       src={icon}
@@ -162,12 +177,27 @@ export default class AllResumes extends Component {
                       height="200"
                     />
                     <figcaption
-                      className="resumetitle text-center"
-                      style={{ position: "absolute", width: "100%" }}
+                      className="resumeTitle text-center"
+                      style={{
+                        position: "absolute",
+                        width: "100%",
+                      }}
                     >
                       {resume.resumetitle}
                     </figcaption>
                   </Link>
+                  <div
+                    className="resumeDate text-center"
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      top: "30px",
+                      fontSize: "small",
+                    }}
+                  >
+                    Updated{" "}
+                    {resume.createdAt.substr(0, resume.createdAt.indexOf("T"))}
+                  </div>
                 </figure>
               ))
             : "No resumes"}
