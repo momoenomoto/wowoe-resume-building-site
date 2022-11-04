@@ -19,8 +19,6 @@ export default class Add extends Component {
     this.onChangeLoc = this.onChangeLoc.bind(this);
     //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
     this.saveResume = this.saveResume.bind(this);
-    this.newResume = this.newResume.bind(this);
-    this.addDetail = this.addDetail.bind(this);
 
     this.state = {
       id: null,
