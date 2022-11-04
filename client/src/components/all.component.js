@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { getBaseURL } from "../http.js";
+import icon from "../img/resume_icon.jpg";
 
 export default class AllResumes extends Component {
   constructor(props) {
@@ -148,24 +149,26 @@ export default class AllResumes extends Component {
         <div>
           {this.state.resumes.length
             ? this.state.resumes.map((resume, index) => (
-                <div key={index}>
+                <figure
+                  className="me-5 mb-5"
+                  style={{ display: "inline-block", position: "relative" }}
+                  key={index}
+                >
                   <Link to={"/resume/" + resume.id}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="100"
-                      height="100"
-                      fill="currentColor"
-                      className="bi bi-file-earmark-person mb-2"
-                      viewBox="0 0 16 16"
-                      display="block"
+                    <img
+                      className="block"
+                      src={icon}
+                      width="200"
+                      height="200"
+                    />
+                    <figcaption
+                      className="resumetitle text-center"
+                      style={{ position: "absolute", width: "100%" }}
                     >
-                      <title>{resume.resumetitle}</title>
-                      <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z" />
-                    </svg>
+                      {resume.resumetitle}
+                    </figcaption>
                   </Link>
-                  {resume.resumetitle}
-                </div>
+                </figure>
               ))
             : "No resumes"}
         </div>
