@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "../with-router";
-const baseURL = "http://localhost:3000";
+import { getBaseURL } from "../http.js";
 
 class Resume extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class Resume extends Component {
   }
 
   getResume(id) {
-    fetch(baseURL + "/resume/" + id)
+    fetch(getBaseURL() + "/resume/" + id)
       .then((response) => response.json())
       .then((data) => {
         this.setState({

@@ -5,7 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
-const baseURL = "http://localhost:3000";
+import { getBaseURL } from "../http.js";
+// const baseURL = process.env.BASEURL || "http://localhost:3000";
 
 export default class Add extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ export default class Add extends Component {
       body: JSON.stringify(data),
     };
 
-    fetch(baseURL + "/resume/add", requestOptions)
+    fetch(getBaseURL() + "/resume/add", requestOptions)
       .then((response) => {
         this.setState({
           id: response.data.id,

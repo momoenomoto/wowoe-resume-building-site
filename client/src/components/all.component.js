@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const baseURL = "http://localhost:3000";
+import { getBaseURL } from "../http.js";
 
 export default class AllResumes extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export default class AllResumes extends Component {
   }
 
   retrieveResumes() {
-    fetch(baseURL + "/resumes")
+    fetch(getBaseURL() + "/resumes")
       .then((response) => response.json())
       .then((data) => {
         this.setState({
@@ -75,7 +75,7 @@ export default class AllResumes extends Component {
   // }
 
   search() {
-    fetch(baseURL + "/resumes?resumetitle=${this.state.search}`")
+    fetch(getBaseURL() + "/resumes?resumetitle=${this.state.search}`")
       .then((response) => {
         this.setState({
           resumes: response.data.resumes,
