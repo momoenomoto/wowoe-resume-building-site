@@ -6,16 +6,16 @@ import Col from "react-bootstrap/Col";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
 import { getBaseURL } from "../http.js";
-// const baseURL = process.env.BASEURL || "http://localhost:3000";
+import { withRouter } from "../with-router";
 
-export default class Add extends Component {
+class Add extends Component {
   constructor(props) {
     super(props);
     this.onChangeResumeTitle = this.onChangeResumeTitle.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     //this.onChangePhoto = this.onChangePhoto.bind(this);
-    this.onChangeEmail = this.onChangeTitle.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePhone = this.onChangePhone.bind(this);
     this.onChangeLoc = this.onChangeLoc.bind(this);
     //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
@@ -91,6 +91,7 @@ export default class Add extends Component {
       phone: this.state.phone,
       loc: this.state.loc,
     };
+    console.log(data);
 
     const requestOptions = {
       method: "POST",
@@ -116,6 +117,7 @@ export default class Add extends Component {
       .catch((e) => {
         console.log(e);
       });
+    this.props.router.navigate("/resumes");
   }
 
   render() {
@@ -159,7 +161,7 @@ export default class Add extends Component {
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridEmail">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" onChange={this.onChangeEmail} />
+              <Form.Control type="text" onChange={this.onChangeEmail} />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridPhone">
@@ -169,7 +171,7 @@ export default class Add extends Component {
 
             <Form.Group as={Col} controlId="formGridLoc">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" onChange={this.onChangeloc} />
+              <Form.Control type="text" onChange={this.onChangeLoc} />
             </Form.Group>
           </Row>
 
@@ -223,3 +225,5 @@ export default class Add extends Component {
     );
   }
 }
+
+export default withRouter(Add);
