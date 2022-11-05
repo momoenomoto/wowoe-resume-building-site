@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -7,6 +7,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
 import { getBaseURL } from "../http.js";
 import { withRouter } from "../with-router";
+import { Navigate } from "react-router-dom";
 
 class Add extends Component {
   constructor(props) {
@@ -22,7 +23,6 @@ class Add extends Component {
     this.saveResume = this.saveResume.bind(this);
 
     this.state = {
-      id: null,
       resumetitle: "",
       name: "",
       title: "",
@@ -32,7 +32,7 @@ class Add extends Component {
       loc: "",
       //lastEdited: new Date().toLocaleString(),
       //details: [],
-      published: false,
+      //published: false,
       submitted: false,
     };
   }
@@ -91,7 +91,6 @@ class Add extends Component {
       phone: this.state.phone,
       loc: this.state.loc,
     };
-    console.log(data);
 
     const requestOptions = {
       method: "POST",
@@ -100,30 +99,34 @@ class Add extends Component {
     };
 
     fetch(getBaseURL() + "/resume/add", requestOptions)
-      .then((response) => {
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
         this.setState({
-          id: response.data.id,
-          resumetitle: response.data.resumetitle,
-          name: response.data.name,
-          title: response.data.title,
-          email: response.data.email,
-          phone: response.state.phone,
-          loc: response.data.loc,
+          resumetitle: data.resumetitle,
+          name: data.name,
+          title: data.title,
+          email: data.email,
+          phone: data.phone,
+          loc: data.loc,
           //published: response.data.published,
           submitted: true,
         });
-        console.log(response.data);
       })
       .catch((e) => {
         console.log(e);
       });
-    this.props.router.navigate("/resumes");
   }
+
+  onSubmit = (evt) => {
+    evt.preventDefault();
+  };
 
   render() {
     return (
       <>
-        <Form>
+        {this.state.submitted && <Navigate to={"/resumes"} />}
+        <Form onSubmit={this.onSubmit}>
           <Row className="justify-content-md-center">
             <Col xs lg="3">
               <FloatingLabel
@@ -213,13 +216,6 @@ class Add extends Component {
               Save
             </Button>
           </Row>
-
-          {/* <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridName">
-          <Form.Label>Resume Name</Form.Label>
-          <Form.Control type="text" placeholder="Enter resume name" />
-        </Form.Group>
-            </Row> */}
         </Form>
       </>
     );

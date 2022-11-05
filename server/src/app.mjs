@@ -90,6 +90,7 @@ app.post("/resume/add", (req, res) => {
         message: err.message,
       });
     } else {
+      console.log(savedResume);
       res.json(savedResume);
     }
   });

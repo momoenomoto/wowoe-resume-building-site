@@ -4,8 +4,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { getBaseURL } from "../http.js";
 import icon from "../img/resume_icon.jpg";
+import { withRouter } from "../with-router";
 
-export default class AllResumes extends Component {
+class AllResumes extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearch = this.onChangeSearch.bind(this);
@@ -25,8 +26,15 @@ export default class AllResumes extends Component {
   }
 
   componentDidMount() {
+    // this._unsubscribe = this.props.navigation.addListener("focus", () => {
     this.retrieveResumes();
+    // });
   }
+
+  // componentWillUnmount() {
+  //   // remove event listener
+  //   this._unsubscribe();
+  // }
 
   handleMouseEnter = () => {
     this.setState({ hover: true });
@@ -200,9 +208,10 @@ export default class AllResumes extends Component {
                   </div>
                 </figure>
               ))
-            : "No resumes"}
+            : "You don't have any resumes yet!"}
         </div>
       </div>
     );
   }
 }
+export default withRouter(AllResumes);
