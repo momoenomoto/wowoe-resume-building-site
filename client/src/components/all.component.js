@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getBaseURL } from "../http.js";
+import { getBaseURL, getCurrentUser } from "../http.js";
 import icon from "../img/resume_icon.jpg";
 import { withRouter } from "../with-router";
+import { Navigate } from "react-router-dom";
 
 class AllResumes extends Component {
   constructor(props) {
@@ -20,10 +21,15 @@ class AllResumes extends Component {
       currentIndex: -1,
       search: "",
       hover: false,
+      // redirect:
     };
   }
 
   componentDidMount() {
+    // const currentUser = getCurrentUser();
+    // if (!currentUser) {
+    //   this.props.router.navigate("/");
+    // } else
     this.retrieveResumes();
   }
 
@@ -53,7 +59,7 @@ class AllResumes extends Component {
         this.setState({
           resumes: data.resumes,
         });
-        console.log(data);
+        // console.log(data);
       })
       .catch((e) => {
         console.log(e);
@@ -96,7 +102,7 @@ class AllResumes extends Component {
         this.setState({
           resumes: data.resumes,
         });
-        console.log(data);
+        // console.log(data);
       })
       .catch((e) => {
         console.log(e);

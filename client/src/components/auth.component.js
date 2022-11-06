@@ -116,7 +116,7 @@ class Auth extends Component {
         else throw new Error(response.statusText);
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.user) {
           this.setState({
             isSubmitting: false,
@@ -172,7 +172,7 @@ class Auth extends Component {
           } else throw new Error(response.statusText);
         })
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           this.setState({
             message: data.message,
             isSubmitting: false,

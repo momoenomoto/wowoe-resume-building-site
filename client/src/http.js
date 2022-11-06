@@ -6,3 +6,9 @@ export function getBaseURL() {
 
   return url;
 }
+
+export function getCurrentUser() {
+  const user = localStorage.getItem("user");
+  if (user !== "undefined") return JSON.parse(user);
+  else return null;
+}

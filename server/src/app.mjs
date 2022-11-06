@@ -37,8 +37,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use(auth.authRequired(["/resume/all"]));
-
 //app.set("view engine", "hbs");
 // app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.urlencoded({ extended: false }));
@@ -49,6 +47,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// app.use(auth.authRequired(["/resumes", "/resume/add"]));
 
 app.use((req, res, next) => {
   res.locals.user = req.session.user;

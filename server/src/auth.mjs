@@ -73,7 +73,7 @@ const authRequired = (authRequiredPaths) => {
   return (req, res, next) => {
     if (authRequiredPaths.includes(req.path)) {
       if (!req.session.user) {
-        res.redirect("/login");
+        res.redirect("/");
       } else {
         next();
       }

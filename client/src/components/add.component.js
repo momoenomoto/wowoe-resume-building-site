@@ -103,7 +103,7 @@ class Add extends Component {
         } else throw new Error(response.statusText);
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         this.setState({
           resumetitle: data.resumetitle,
           name: data.name,

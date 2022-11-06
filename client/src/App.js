@@ -8,12 +8,11 @@ import Add from "./components/add.component.js";
 import Resume from "./components/resume.component.js";
 import Network from "./components/network.component.js";
 import logo from "./img/wowoe-logo.png";
-import { getBaseURL } from "./http.js";
+import { getBaseURL, getCurrentUser } from "./http.js";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.getCurrentUser = this.getCurrentUser.bind(this);
     this.logOut = this.logOut.bind(this);
 
     this.state = {
@@ -23,7 +22,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const user = this.getCurrentUser();
+    const user = getCurrentUser();
 
     if (user) {
       this.setState({
@@ -31,13 +30,6 @@ class App extends Component {
         showMyResumes: true,
       });
     }
-  }
-
-  getCurrentUser() {
-    const user = localStorage.getItem("user");
-    // console.log(user);
-    if (user !== "undefined") return JSON.parse(user);
-    else return null;
   }
 
   logOut() {
