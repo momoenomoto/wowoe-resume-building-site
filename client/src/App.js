@@ -6,6 +6,7 @@ import AllResumes from "./components/all.component.js";
 import Auth from "./components/auth.component.js";
 import Add from "./components/add.component.js";
 import Resume from "./components/resume.component.js";
+import logo from "./img/wowoe-logo.png";
 
 class App extends Component {
   render() {
@@ -13,7 +14,12 @@ class App extends Component {
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
           <a href="/" className="navbar-brand">
-            &nbsp; &nbsp; wowoe
+            <img
+              className="block"
+              src={logo}
+              width="50"
+              style={{ position: "relative", left: "10px" }}
+            />
           </a>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">

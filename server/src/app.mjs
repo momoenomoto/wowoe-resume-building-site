@@ -64,18 +64,30 @@ app.get("/", (req, res) => {
 });
 
 app.get("/resumes", (req, res) => {
-  Resume.find({})
-    .sort("-createdAt")
-    .exec((err, resumes) => {
-      res.json({
-        user: req.session.user,
-        resumes: resumes,
+  const resumetitle = req.query.resumetitle ?? "";
+  console.log(resumetitle);
+  if (resumetitle === "") {
+    Resume.find({})
+      .sort("-updatedAt")
+      .exec((err, resumes) => {
+        res.json({
+          user: req.session.user,
+          resumes: resumes,
+        });
       });
-    });
+  } else {
+    Resume.find({ resumetitle: { $regex: resumetitle, $options: "i" } })
+      .sort("-updatedAt")
+      .exec((err, resumes) => {
+        res.json({
+          user: req.session.user,
+          resumes: resumes,
+        });
+      });
+  }
 });
 
 app.post("/resume/add", (req, res) => {
-  const { resumeTitle, name, title, email, phone, loc } = req.body;
   const resume = new Resume({
     resumetitle: req.body.resumetitle,
     name: req.body.name,

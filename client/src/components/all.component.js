@@ -92,12 +92,13 @@ class AllResumes extends Component {
   // }
 
   search() {
-    fetch(getBaseURL() + "/resumes?resumetitle=${this.state.search}`")
-      .then((response) => {
+    fetch(getBaseURL() + `/resumes?resumetitle=${this.state.search}`)
+      .then((response) => response.json())
+      .then((data) => {
         this.setState({
-          resumes: response.data.resumes,
+          resumes: data.resumes,
         });
-        console.log(response.data);
+        console.log(data);
       })
       .catch((e) => {
         console.log(e);
@@ -116,7 +117,7 @@ class AllResumes extends Component {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search by resume name"
+                placeholder="Search by resume title"
                 value={this.state.search}
                 onChange={this.onChangeSearch}
               />
@@ -124,7 +125,7 @@ class AllResumes extends Component {
                 <button
                   className="btn btn-outline-secondary"
                   type="button"
-                  onClick={this.refreshResumes}
+                  onClick={this.search}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -208,7 +209,7 @@ class AllResumes extends Component {
                   </div>
                 </figure>
               ))
-            : "You don't have any resumes yet!"}
+            : ""}
         </div>
       </div>
     );
