@@ -103,7 +103,7 @@ app.post("/resume/add", (req, res) => {
   });
   resume.save((err, savedResume) => {
     if (err) {
-      res.status(500).send({
+      res.status(500).json({
         message: err.message,
       });
     } else {
@@ -118,13 +118,13 @@ app.get("/resume/:id", (req, res) => {
   Resume.findById(id)
     .then((data) => {
       if (!data)
-        res.status(404).send({ message: "Not found resume with id " + id });
+        res.status(404).json({ message: "Not found resume with id " + id });
       else res.json(data);
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error retrieving resume with id " + id });
+        .json({ message: "Error retrieving resume with id " + id });
     });
 });
 
