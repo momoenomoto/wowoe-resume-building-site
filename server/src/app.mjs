@@ -7,24 +7,29 @@ import mongoose from "mongoose";
 import session from "express-session";
 import "./db.mjs";
 import * as auth from "./auth.mjs";
+import * as dotenv from "dotenv";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: __dirname + "/../.env" });
 
 const corsOptions = {
-  origin: "http://localhost:3001",
+  origin:
+    process.env.NODE_ENV === "PRODUCTION"
+      ? "http://linserv1.cims.nyu.edu/29901"
+      : "http://localhost:3001",
+  credentials: true,
 };
 
 const Resume = mongoose.model("Resume");
 
 const loginMessages = {
-  "PASSWORDS DO NOT MATCH": "Incorrect password",
-  "USER NOT FOUND": "User doesn't exist",
+  "PASSWORDS DO NOT MATCH": "Incorrect username or password",
+  "USER NOT FOUND": "Incorrect username or password",
 };
 const registrationMessages = {
   "USERNAME ALREADY EXISTS": "Username already exists",
-  "USERNAME PASSWORD TOO SHORT": "Username or password is too short",
 };
 
 app.use(cors(corsOptions));
@@ -36,10 +41,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //app.set("view engine", "hbs");
 // app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
-    secret: "this is top secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
@@ -60,18 +65,18 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   //res.render("index");
   //res.json({ message: "Welcome to this app." });
-  res.redirect("/resumes");
+  res.json({ message: "Welcome to Wowoe" });
 });
 
 app.get("/resumes", (req, res) => {
   const resumetitle = req.query.resumetitle ?? "";
-  console.log(resumetitle);
   if (resumetitle === "") {
     Resume.find({})
       .sort("-updatedAt")
       .exec((err, resumes) => {
+        // console.log(req.session.user);
         res.json({
-          user: req.session.user,
+          // user: req.session.user,
           resumes: resumes,
         });
       });
@@ -80,7 +85,7 @@ app.get("/resumes", (req, res) => {
       .sort("-updatedAt")
       .exec((err, resumes) => {
         res.json({
-          user: req.session.user,
+          // user: req.session.user,
           resumes: resumes,
         });
       });
@@ -123,12 +128,12 @@ app.get("/resume/:id", (req, res) => {
     });
 });
 
-app.post("/login", (req, res) => {
+app.post("/register", (req, res) => {
   // setup callbacks for register success and error
   function success(newUser) {
     auth.startAuthenticatedSession(req, newUser, (err) => {
       if (!err) {
-        res.redirect("/");
+        res.json({ user: req.session.user });
       } else {
         res.json({ message: "Session error" });
       }
@@ -151,19 +156,22 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.post("/register", (req, res) => {
+app.post("/login", (req, res) => {
   // setup callbacks for login success and error
   function success(user) {
     auth.startAuthenticatedSession(req, user, (err) => {
-      if (!err) {
-        res.redirect("/");
-      } else {
+      if (err) {
         res.json({ message: "error starting auth sess: " + err });
+      } else {
+        console.log(req.session.user);
+        res.json({ user: req.session.user });
+        // res.redirect("/");
       }
     });
   }
 
   function error(err) {
+    console.log(err);
     res.json({
       message: loginMessages[err.message] || "Login unsuccessful",
     });
@@ -171,6 +179,16 @@ app.post("/register", (req, res) => {
 
   // attempt to login
   auth.login(req.body.username, req.body.password, error, success);
+});
+
+app.post("/logout", (req, res) => {
+  auth.endAuthenticatedSession(req, (err) => {
+    if (err) {
+      res.json({ message: "error ending auth sess: " + err });
+    } else {
+      res.redirect("/");
+    }
+  });
 });
 
 app.listen(process.env.PORT || 3000);

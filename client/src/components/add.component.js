@@ -1,13 +1,11 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
 import { getBaseURL } from "../http.js";
 import { withRouter } from "../with-router";
-import { Navigate } from "react-router-dom";
 
 class Add extends Component {
   constructor(props) {
@@ -99,7 +97,11 @@ class Add extends Component {
     };
 
     fetch(getBaseURL() + "/resume/add", requestOptions)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error(response.statusText);
+      })
       .then((data) => {
         console.log(data);
         this.setState({
@@ -112,6 +114,8 @@ class Add extends Component {
           //published: response.data.published,
           submitted: true,
         });
+        this.props.router.navigate("/resumes");
+        window.location.reload();
       })
       .catch((e) => {
         console.log(e);
@@ -125,7 +129,6 @@ class Add extends Component {
   render() {
     return (
       <>
-        {this.state.submitted && <Navigate to={"/resumes"} />}
         <Form onSubmit={this.onSubmit}>
           <Row className="justify-content-md-center">
             <Col xs lg="3">

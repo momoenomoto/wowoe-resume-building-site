@@ -25,39 +25,36 @@ const register = (
   errorCallback,
   successCallback
 ) => {
-  if (username.length < 8 || password.length < 8)
-    errorCallback({ message: "USERNAME PASSWORD TOO SHORT" });
-  else {
-    User.findOne({ username }, (err, result, count) => {
-      if (err) {
-        console.log(err);
-        errorCallback({ message: "USERNAME ERROR" });
-      } else if (result) {
-        errorCallback({ message: "USERNAME ALREADY EXISTS" });
-      } else {
-        bcrypt.hash(password, 10, function (err, hash) {
-          if (err) {
-            console.log(err);
-            errorCallback({ message: "PASSWORD ERROR" });
-          } else {
-            const user = new User({
-              username,
-              email,
-              password: hash,
-            });
-            user.save((err, savedUser) => {
-              if (err) errorCallback({ message: "DOCUMENT SAVE ERROR" });
-              else successCallback(savedUser);
-            });
-          }
-        });
-      }
-    });
-  }
+  // client-side form validation
+  User.findOne({ username }, (err, result) => {
+    if (err) {
+      console.log(err);
+      errorCallback({ message: "USERNAME ERROR" });
+    } else if (result) {
+      errorCallback({ message: "USERNAME ALREADY EXISTS" });
+    } else {
+      bcrypt.hash(password, 10, function (err, hash) {
+        if (err) {
+          console.log(err);
+          errorCallback({ message: "PASSWORD ERROR" });
+        } else {
+          const user = new User({
+            username,
+            password: hash,
+            email,
+          });
+          user.save((err, savedUser) => {
+            if (err) errorCallback({ message: "DOCUMENT SAVE ERROR" });
+            else successCallback(savedUser);
+          });
+        }
+      });
+    }
+  });
 };
 
 const login = (username, password, errorCallback, successCallback) => {
-  User.findOne({ username: username }, (err, user) => {
+  User.findOne({ username }, (err, user) => {
     if (!err && user) {
       bcrypt.compare(password, user.password, (err, passwordMatch) => {
         // regenerate session if passwordMatch is true

@@ -8,17 +8,20 @@ import mongooseSlugPlugin from "mongoose-slug-plugin";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  hash: { type: String, unique: true, required: true },
-  email: { type: String, required: true },
-  lastvisited: { type: Date, default: Date.now },
-  published: { type: mongoose.Schema.Types.ObjectId, ref: "Resume" },
-  resumes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Resume" }],
-});
+const UserSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true },
+    password: { type: String, unique: true, required: true },
+    email: { type: String, required: true },
+    published: { type: mongoose.Schema.Types.ObjectId, ref: "Resume" },
+    resumes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Resume" }],
+  },
+  { timestamps: true }
+);
 
 const ResumeSchema = new mongoose.Schema(
   {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     resumetitle: { type: String, required: true },
     name: String,
     title: String,

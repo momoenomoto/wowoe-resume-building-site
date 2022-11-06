@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { getBaseURL } from "../http.js";
 import icon from "../img/resume_icon.jpg";
 import { withRouter } from "../with-router";
@@ -26,15 +24,8 @@ class AllResumes extends Component {
   }
 
   componentDidMount() {
-    // this._unsubscribe = this.props.navigation.addListener("focus", () => {
     this.retrieveResumes();
-    // });
   }
-
-  // componentWillUnmount() {
-  //   // remove event listener
-  //   this._unsubscribe();
-  // }
 
   handleMouseEnter = () => {
     this.setState({ hover: true });
@@ -53,7 +44,11 @@ class AllResumes extends Component {
 
   retrieveResumes() {
     fetch(getBaseURL() + "/resumes")
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error(response.statusText);
+      })
       .then((data) => {
         this.setState({
           resumes: data.resumes,
@@ -93,7 +88,10 @@ class AllResumes extends Component {
 
   search() {
     fetch(getBaseURL() + `/resumes?resumetitle=${this.state.search}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error(response.statusText);
+      })
       .then((data) => {
         this.setState({
           resumes: data.resumes,
