@@ -15,10 +15,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: __dirname + "/../.env" });
 
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "PRODUCTION"
-      ? "http://linserv1.cims.nyu.edu/29901"
-      : "http://localhost:3001",
+  origin: ["http://linserv1.cims.nyu.edu/29901", "http://localhost:3001"],
   credentials: true,
 };
 

@@ -1,5 +1,5 @@
 export function getBaseURL() {
-  if (process.env.NODE_ENV === "PRODUCTION")
+  if (process.env.NODE_ENV === "production")
     return "http://linserv1.cims.nyu.edu/29902";
   else return "http://localhost:3000";
 }
