@@ -11,7 +11,7 @@ export default class Network extends Component {
   }
 
   componentDidMount() {
-    fetch(getBaseURL() + "/")
+    fetch(getBaseURL() + "/", { mode: "cors" })
       .then((response) => {
         if (response.ok) {
           return response.json();

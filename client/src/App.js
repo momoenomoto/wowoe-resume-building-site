@@ -35,7 +35,7 @@ class App extends Component {
   logOut() {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", mode: "cors" },
       // credentials: "include",
       // AccessControlAllowCredentials: "true",
     };

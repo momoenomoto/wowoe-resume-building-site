@@ -105,7 +105,7 @@ class Auth extends Component {
     };
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", mode: "cors" },
       body: JSON.stringify(data),
       // credentials: "include",
       // AccessControlAllowCredentials: "true",
@@ -159,7 +159,7 @@ class Auth extends Component {
 
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", mode: "cors" },
         body: JSON.stringify(data),
         // credentials: "include",
         // headers: { "Access-Control-Allow-Credentials": true },

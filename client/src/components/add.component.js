@@ -92,7 +92,7 @@ class Add extends Component {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", mode: "cors"},
       body: JSON.stringify(data),
     };
 

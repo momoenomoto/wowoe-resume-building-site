@@ -27,7 +27,7 @@ class Resume extends Component {
   }
 
   getResume(id) {
-    fetch(getBaseURL() + "/resume/" + id)
+    fetch(getBaseURL() + "/resume/" + id, { mode: "cors" })
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error(response.statusText);

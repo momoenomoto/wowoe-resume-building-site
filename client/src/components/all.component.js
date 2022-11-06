@@ -49,7 +49,7 @@ class AllResumes extends Component {
   }
 
   retrieveResumes() {
-    fetch(getBaseURL() + "/resumes")
+    fetch(getBaseURL() + "/resumes", { mode: "cors" })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -93,7 +93,9 @@ class AllResumes extends Component {
   // }
 
   search() {
-    fetch(getBaseURL() + `/resumes?resumetitle=${this.state.search}`)
+    fetch(getBaseURL() + `/resumes?resumetitle=${this.state.search}`, {
+      mode: "cors",
+    })
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error(response.statusText);
