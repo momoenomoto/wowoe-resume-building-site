@@ -12,14 +12,14 @@ Remembering what to buy at the grocery store is waaaaay too difficult. Also, sho
 
 Shoppy Shoperson is a web app that will allow users to keep track of multiple grocery lists. Users can register and login. Once they're logged in, they can create or view their grocery list. For every list that they have, they can add items to the list or cross off items.
 
-What better way to kill time than word games? Getting tired of Wordle? Try Wowoe! 
+What better way to kill time than word games? Getting tired of Wordle? Try Wowoe!
 Wowoe is a simple web-based word game that refreshes every hour with a new word or you can practice by choosing your own word. The aim of the game is to get the highest score by finding words that are most related to the word of the hour or your own chosen word. You have 5 chances to get the highest score as possible. Once you sign in, you can keep track of your hourly score trend and look at your highest record. You can also compare your record to the highest record of other players.-->
 
-Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, or text. The resume can also be translated into various languages. Past resumes can be saved and viewed as well. 
+Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, or text. The resume can also be translated into various languages. Past resumes can be saved and viewed as well.
 
 ## Data Model
 
-<!--(__TODO__: a description of your application's data and their relationships to each other) 
+<!--(__TODO__: a description of your application's data and their relationships to each other)
 
 The application will store Users, Lists and Items
 
@@ -54,7 +54,7 @@ An Example List with Embedded Items:
 
 The application will store Users, Stats, and CurrentGame.
 
-* each user will have their own game stats 
+* each user will have their own game stats
 * the game stats will include the status of the current game (via embedding)
 
 An Example User:
@@ -88,9 +88,9 @@ An Example CurrentGame Document:
 
 The application will store Users, Resumes, and Sections.
 
-* each user will have their own resume page (via a reference)
-* a resume page can have multiple sections (via references)
-* each section will have a different type and data associated with it
+- each user will have their own resume page (via a reference)
+- a resume page can have multiple sections (via references)
+- each section will have a different type and data associated with it
 
 An Example User:
 
@@ -99,13 +99,14 @@ An Example User:
   username: "momoe",
   hash: // a password hash
   email: // email during creation
-  lastVisited: // date of last visit 
+  lastVisited: // date of last visit
   published: // id of currently published resume
   resumes:[] // an array of resume object IDs
 }
 ```
 
 An Example Resume:
+
 ```javascript
 {
   _id: // id of resume
@@ -123,6 +124,7 @@ An Example Resume:
 ```
 
 An Example Section:
+
 ```javascript
 {
   _id: // id of section
@@ -133,6 +135,7 @@ An Example Section:
 ```
 
 An Example SubSection:
+
 ```javascript
 {
   name: // name of subsection
@@ -141,11 +144,12 @@ An Example SubSection:
 }
 ```
 
-## [Link to Commented First Draft Schema](db.mjs) 
+## [Link to Commented First Draft Schema](server/src/db.mjs)
 
 <!--(__TODO__: create a first draft of your Schemas in db.mjs and link to it)-->
 
 ## Wireframes
+
 <!--
 (__TODO__: wireframes for all of the pages on your site; they can be as simple as photos of drawings or you can use a tool like Balsamiq, Omnigraffle, etc.)
 
@@ -164,7 +168,7 @@ An Example SubSection:
 
 / - redirect to network page
 
-/resume - page for showing my current published resume
+/resume/:id - page for showing a resume by id
 
 Not logged in yet view:
 ![resume homepage not logged in](documentation/resume-homepage-notloggedin.JPG)
@@ -172,28 +176,26 @@ Not logged in yet view:
 Logged in view:
 ![resume homepage logged in](documentation/resume-homepage-loggedin.JPG)
 
-/resume/signin - page for signing in
-
-/resume/signup - page for signing up
+/auth - page for signing in or signing up
 
 ![resume auth](documentation/resume-auth.JPG)
 
-/resume/slug/edit - page for editing my resume
+/resume/:id/edit - page for editing my resume
 
 ![resume editor](documentation/resume-editor.JPG)
 
-/resume/all - page for showing all of my resumes
+/resumes - page for showing all of my resumes
 
 ![resume all](documentation/resume-all.JPG)
 
-/resume/network - page for showing everyone else' published resumes
+/network - page for showing everyone else' published resumes
 
 ![resume all](documentation/resume-network.JPG)
 
-/resume/username - page for showing someone else' published resume, looks the same as homepage
-
+/resume/:username - page for showing someone else' published resume, looks the same as homepage
 
 ## Site map
+
 <!--
 (__TODO__: draw out a site map that shows how pages are related to each other)
 
@@ -224,6 +226,7 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 8. as a user, I can view my highest record
 9. as a user, I can view the scoreboard and where I am placed
 -->
+
 1. as a non-registered user, I can register a new account with the site
 2. as a non-registered user, I can view someone else's resume with their link.
 3. as a user, I can log in to the site
@@ -251,22 +254,23 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 10 points total out of 8 required points (___TODO__: addtional points will __not__ count for extra credit)
 -->
-* (1 points) Use external API
-  * One to translate all text to another language
-* (2 points) Use a CSS framework such as Bootstrap
-  * To make the user interface nice
-* (6 points) Front-end framework
-  * To allow front-end resume editing experience smooth
+
+- (1 points) Use external API
+  - One to translate all text to another language
+- (2 points) Use a CSS framework such as Bootstrap
+  - To make the user interface nice
+- (6 points) Front-end framework React.js
+  - To allow front-end resume editing experience smooth
 
 9 points total out of 8 required points
 
-## [Link to Initial Main Project File](app.mjs) 
+## [Link to Initial Main Project File](server/src/app.mjs)
 
 <!--(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)-->
 
 ## Annotations / References Used
 
-(__TODO__: list any tutorials/references/etc. that you've based your code off of)
+(**TODO**: list any tutorials/references/etc. that you've based your code off of)
 
 <!--
 1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
