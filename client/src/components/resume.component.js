@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "../with-router";
-import { getBaseURL } from "../http.js";
+import { getBaseURL, getCurrentUser } from "../http.js";
+import { Navigate } from "react-router-dom";
 
 class Resume extends Component {
   constructor(props) {
@@ -19,11 +20,15 @@ class Resume extends Component {
         loc: "",
       },
       message: "",
+      redirect: false,
     };
   }
 
   componentDidMount() {
-    this.getResume(this.props.router.params.id);
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) this.setState({ redirect: "/" });
+    else this.getResume(this.props.router.params.id);
   }
 
   getResume(id) {
@@ -44,6 +49,9 @@ class Resume extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Navigate to={this.state.redirect} />;
+    }
     return (
       <>
         <h1 style={{ fontWeight: "bold" }}>{this.state.currentResume.name}</h1>

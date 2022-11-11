@@ -4,8 +4,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
-import { getBaseURL } from "../http.js";
+import { getBaseURL, getCurrentUser } from "../http.js";
 import { withRouter } from "../with-router";
+import { Navigate } from "react-router-dom";
 
 class Add extends Component {
   constructor(props) {
@@ -32,8 +33,16 @@ class Add extends Component {
       //details: [],
       //published: false,
       submitted: false,
+      redirect: false,
     };
   }
+
+  componentDidMount() {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) this.setState({ redirect: "/" });
+  }
+
   onChangeResumeTitle(e) {
     this.setState({
       resumetitle: e.target.value,
@@ -92,7 +101,7 @@ class Add extends Component {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json", mode: "cors"},
+      headers: { "Content-Type": "application/json", mode: "cors" },
       body: JSON.stringify(data),
     };
 
@@ -127,6 +136,9 @@ class Add extends Component {
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Navigate to={this.state.redirect} />;
+    }
     return (
       <>
         <Form onSubmit={this.onSubmit}>

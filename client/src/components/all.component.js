@@ -21,7 +21,7 @@ class AllResumes extends Component {
       currentIndex: -1,
       search: "",
       hover: false,
-      // redirect:
+      redirect: false,
     };
   }
 
@@ -30,7 +30,10 @@ class AllResumes extends Component {
     // if (!currentUser) {
     //   this.props.router.navigate("/");
     // } else
-    this.retrieveResumes();
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) this.setState({ redirect: "/" });
+    else this.retrieveResumes();
   }
 
   handleMouseEnter = () => {
@@ -112,6 +115,9 @@ class AllResumes extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Navigate to={this.state.redirect} />;
+    }
     return (
       <div className="container">
         <div className="row">
@@ -187,6 +193,7 @@ class AllResumes extends Component {
                   >
                     <img
                       className="block"
+                      alt="icon"
                       src={icon}
                       width="200"
                       height="200"
