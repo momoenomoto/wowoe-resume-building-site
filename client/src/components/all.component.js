@@ -5,6 +5,7 @@ import icon from "../img/resume_icon.jpg";
 import { withRouter } from "../with-router";
 import { Navigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 class AllResumes extends Component {
   constructor(props) {
@@ -83,7 +84,6 @@ class AllResumes extends Component {
       currentResume: resume,
       currentIndex: index,
     });
-    console.log("set");
   }
 
   // removeAllResumes() {
@@ -254,6 +254,23 @@ class AllResumes extends Component {
                       >
                         Remove
                       </Button>{" "}
+                      <div
+                        className="publishBtn text-center"
+                        style={{
+                          position: "absolute",
+                          marginLeft: "40px",
+                          marginTop: "-340px",
+                        }}
+                      >
+                        <Form>
+                          <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Publish"
+                            // checked
+                          />
+                        </Form>
+                      </div>
                     </div>
                   ) : (
                     ""
@@ -261,26 +278,6 @@ class AllResumes extends Component {
                 </div>
               ))
             : ""}
-
-          {/* {this.state.currentResume ? (
-            <div>
-              <div>
-                <label>
-                  <strong>Title:</strong>
-                </label>{" "}
-                {this.state.currentResume.resumetitle}
-              </div>
-
-              <Link
-                to={"/resume/" + this.state.currentResume.id}
-                className="badge badge-warning"
-              >
-                Edit
-              </Link>
-            </div>
-          ) : (
-            ""
-          )} */}
         </div>
       </div>
     );
