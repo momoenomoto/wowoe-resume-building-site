@@ -38,7 +38,6 @@ const ResumeSchema = new mongoose.Schema(
         value: String,
       },
     ],
-    //lastEdited: { type: Date },
     sections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Section" }],
   },
   { timestamps: true }

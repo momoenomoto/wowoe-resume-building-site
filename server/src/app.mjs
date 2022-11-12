@@ -68,7 +68,15 @@ app.get("/", (req, res) => {
 
 app.get("/resumes", (req, res) => {
   const resumetitle = req.query.resumetitle ?? "";
-  const user = JSON.parse(req.get("user"));
+  let user;
+  try {
+    user = JSON.parse(req.get("user"));
+  } catch {
+    res.status(403).json({
+      message: "Forbidden access",
+    });
+    return;
+  }
   if (resumetitle === "") {
     User.findOne({ username: user.username })
 
@@ -114,32 +122,6 @@ app.get("/resumes", (req, res) => {
       });
   }
 });
-
-// User.aggregate([{
-//   "$match": {
-//       "_id": new mongoose.mongo.ObjectId("58c7fa6987200dfc592d088c")
-//   }
-// }, {
-//   "$unwind": "$Items"
-// }, {
-//   "$sort": {
-//       "Items.createdAt": -1
-//   }
-// }, {
-//   "$group": {
-//       "Items": {
-//           "$push": "$Items"
-//       },
-//       "_id": 1
-//   }
-// }, {
-//   "$project": {
-//       "_id": 0,
-//       "Items": 1
-//   }
-// }], function(err, res) {
-//   console.log(res);
-// })
 
 app.post("/resume/add", (req, res) => {
   // console.log(req.session.user._id);
