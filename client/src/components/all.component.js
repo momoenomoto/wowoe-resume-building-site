@@ -4,6 +4,7 @@ import { getBaseURL, getCurrentUser } from "../http.js";
 import icon from "../img/resume_icon.jpg";
 import { withRouter } from "../with-router";
 import { Navigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 class AllResumes extends Component {
   constructor(props) {
@@ -82,6 +83,7 @@ class AllResumes extends Component {
       currentResume: resume,
       currentIndex: index,
     });
+    console.log("set");
   }
 
   // removeAllResumes() {
@@ -178,18 +180,14 @@ class AllResumes extends Component {
         <div>
           {this.state.resumes.length
             ? this.state.resumes.map((resume, index) => (
-                <figure
-                  className="me-5 mb-5"
-                  style={{ display: "inline-block", position: "relative" }}
-                  key={index}
-                >
-                  <Link
-                    to={"/resume/" + resume.id}
-                    // style={{
-                    //   color: this.state.hover ? "blue" : "black",
-                    // }}
-                    // onMouseEnter={this.handleMouseEnter}
-                    // onMouseLeave={this.handleMouseLeave}
+                <div className="d-inline-block">
+                  <figure
+                    className={
+                      "me-5 mb-5 group-item " +
+                      (index === this.state.currentIndex ? "active" : "")
+                    }
+                    key={index}
+                    onClick={() => this.setActiveResume(resume, index)}
                   >
                     <img
                       className="block"
@@ -203,26 +201,86 @@ class AllResumes extends Component {
                       style={{
                         position: "absolute",
                         width: "100%",
+                        marginTop: "-10px",
                       }}
                     >
                       {resume.resumetitle}
                     </figcaption>
-                  </Link>
-                  <div
-                    className="resumeDate text-center"
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      top: "30px",
-                      fontSize: "small",
-                    }}
-                  >
-                    Updated{" "}
-                    {resume.createdAt.substr(0, resume.createdAt.indexOf("T"))}
-                  </div>
-                </figure>
+                    <div
+                      className="resumeDate text-center"
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        top: "20px",
+                        fontSize: "small",
+                        marginBottom: "40px",
+                        // margin: "10px",
+                      }}
+                    >
+                      Updated{" "}
+                      {resume.createdAt.substr(
+                        0,
+                        resume.createdAt.indexOf("T")
+                      )}
+                    </div>
+                  </figure>
+                  {index === this.state.currentIndex ? (
+                    <div
+                      className="resumeButtons text-center"
+                      style={{
+                        position: "absolute",
+                        marginLeft: "15px",
+                        marginTop: "-40px",
+                      }}
+                    >
+                      <Button
+                        href={"/resume/" + resume.id}
+                        variant="info"
+                        size="sm"
+                      >
+                        View
+                      </Button>{" "}
+                      <Button
+                        href={"/resume/" + resume.id}
+                        variant="warning"
+                        size="sm"
+                      >
+                        Edit
+                      </Button>{" "}
+                      <Button
+                        href={"/resume/" + resume.id}
+                        variant="danger"
+                        size="sm"
+                      >
+                        Remove
+                      </Button>{" "}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               ))
             : ""}
+
+          {/* {this.state.currentResume ? (
+            <div>
+              <div>
+                <label>
+                  <strong>Title:</strong>
+                </label>{" "}
+                {this.state.currentResume.resumetitle}
+              </div>
+
+              <Link
+                to={"/resume/" + this.state.currentResume.id}
+                className="badge badge-warning"
+              >
+                Edit
+              </Link>
+            </div>
+          ) : (
+            ""
+          )} */}
         </div>
       </div>
     );
