@@ -65,6 +65,11 @@ class App extends Component {
             />
           </a>
           <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/network"} className="nav-link">
+                Network
+              </Link>
+            </li>
             {this.state.showMyResumes && (
               <li className="nav-item">
                 <Link to={"/resumes"} className="nav-link">

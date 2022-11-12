@@ -97,6 +97,7 @@ app.post("/resume/add", (req, res) => {
     email: req.body.email,
     phone: req.body.phone,
     loc: req.body.loc,
+    details: req.body.details,
   });
   resume.save((err, savedResume) => {
     if (err) {

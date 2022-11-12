@@ -184,7 +184,7 @@ class AllResumes extends Component {
                   <figure
                     className={
                       "me-5 mb-5 group-item " +
-                      (index === this.state.currentIndex ? "active" : "")
+                      (index === this.state.currentIndex ? "selected" : "")
                     }
                     key={index}
                     onClick={() => this.setActiveResume(resume, index)}

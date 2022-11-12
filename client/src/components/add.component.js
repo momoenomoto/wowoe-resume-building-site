@@ -18,6 +18,9 @@ class Add extends Component {
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePhone = this.onChangePhone.bind(this);
     this.onChangeLoc = this.onChangeLoc.bind(this);
+    this.onChangeDetail = this.onChangeDetail.bind(this);
+    this.addDetail = this.addDetail.bind(this);
+    this.removeDetail = this.removeDetail.bind(this);
     //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
     this.saveResume = this.saveResume.bind(this);
 
@@ -29,8 +32,7 @@ class Add extends Component {
       email: "",
       phone: "",
       loc: "",
-      //lastEdited: new Date().toLocaleString(),
-      //details: [],
+      details: [],
       //published: false,
       submitted: false,
       redirect: false,
@@ -78,15 +80,19 @@ class Add extends Component {
   }
 
   addDetail() {
-    // this.setState({
-    //   details: this.state.details.push(""),
-    // });
+    this.setState({
+      details: [...this.state.details, { name: "", value: "" }],
+    });
+  }
+
+  removeDetail(i) {
+    this.state.details.splice(i, 1);
+    this.setState({ details: this.state.details });
   }
 
   onChangeDetail(i, e) {
-    // this.setState({
-    //   details: (this.state.details[i] = e.target.value),
-    // });
+    this.state.details[i][e.target.name] = e.target.value;
+    this.setState({ details: this.state.details });
   }
 
   saveResume() {
@@ -97,6 +103,7 @@ class Add extends Component {
       email: this.state.email,
       phone: this.state.phone,
       loc: this.state.loc,
+      details: this.state.details,
     };
 
     const requestOptions = {
@@ -120,6 +127,7 @@ class Add extends Component {
           email: data.email,
           phone: data.phone,
           loc: data.loc,
+          details: data.details,
           //published: response.data.published,
           submitted: true,
         });
@@ -175,7 +183,6 @@ class Add extends Component {
               <Form.Control type="text" onChange={this.onChangeTitle} />
             </Form.Group>
           </Row>
-
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridEmail">
               <Form.Label>Email</Form.Label>
@@ -192,25 +199,50 @@ class Add extends Component {
               <Form.Control type="text" onChange={this.onChangeLoc} />
             </Form.Group>
           </Row>
-
-          {/* <Form.Group controlId="formGridDetails">
-          {this.state.details &&
-            this.state.details.map((detail, index) => (
-              <Form.Control
-                className="mb-3"
-                key={index}
-                type="text"
-                placeholder="enter"
-              />
-            ))}
-        </Form.Group> */}
-          <Button
-            variant="outline-success"
-            className="mb-3"
-            onClick={this.addDetail}
-          >
-            Add additional details
-          </Button>
+          {this.state.details.map((element, index) => (
+            <div key={index}>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    value={element.name || ""}
+                    onChange={(e) => this.onChangeDetail(index, e)}
+                  />
+                </Col>
+                <Col>
+                  <Form.Control
+                    type="text"
+                    name="value"
+                    placeholder="Value"
+                    value={element.value || ""}
+                    onChange={(e) => this.onChangeDetail(index, e)}
+                  />
+                </Col>
+                <Col>
+                  <Button
+                    variant="danger"
+                    type="button"
+                    className="button remove"
+                    onClick={() => this.removeDetail(index)}
+                  >
+                    Remove
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ))}
+          <div className="add-detail">
+            <Button
+              variant="outline-success"
+              className="mb-3"
+              type="button"
+              onClick={this.addDetail}
+            >
+              Add additional details
+            </Button>
+          </div>
           <hr />
           <Row>
             <Button

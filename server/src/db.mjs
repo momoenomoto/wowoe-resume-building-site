@@ -32,7 +32,12 @@ const ResumeSchema = new mongoose.Schema(
     email: String,
     phone: String,
     loc: String,
-    //details: [String],
+    details: [
+      {
+        name: String,
+        value: String,
+      },
+    ],
     //lastEdited: { type: Date },
     sections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Section" }],
   },
