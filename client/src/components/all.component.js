@@ -54,7 +54,10 @@ class AllResumes extends Component {
   }
 
   retrieveResumes() {
-    fetch(getBaseURL() + "/resumes", { mode: "cors" })
+    fetch(getBaseURL() + "/resumes", {
+      mode: "cors",
+      headers: new Headers({ user: JSON.stringify(getCurrentUser()) }),
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -100,6 +103,7 @@ class AllResumes extends Component {
   search() {
     fetch(getBaseURL() + `/resumes?resumetitle=${this.state.search}`, {
       mode: "cors",
+      headers: new Headers({ user: JSON.stringify(getCurrentUser()) }),
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -178,9 +182,9 @@ class AllResumes extends Component {
           </div>
         </div>
         <div>
-          {this.state.resumes.length
+          {this.state.resumes
             ? this.state.resumes.map((resume, index) => (
-                <div className="d-inline-block">
+                <div className="d-inline-block" key={index}>
                   <figure
                     className={
                       "me-5 mb-5 group-item " +

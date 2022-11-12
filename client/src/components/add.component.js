@@ -104,6 +104,7 @@ class Add extends Component {
       phone: this.state.phone,
       loc: this.state.loc,
       details: this.state.details,
+      user: getCurrentUser(),
     };
 
     const requestOptions = {

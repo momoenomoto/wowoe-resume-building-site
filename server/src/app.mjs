@@ -20,6 +20,7 @@ const corsOptions = {
 };
 
 const Resume = mongoose.model("Resume");
+const User = mongoose.model("User");
 
 const loginMessages = {
   "PASSWORDS DO NOT MATCH": "Incorrect username or password",
@@ -67,18 +68,43 @@ app.get("/", (req, res) => {
 
 app.get("/resumes", (req, res) => {
   const resumetitle = req.query.resumetitle ?? "";
+  const user = JSON.parse(req.get("user"));
   if (resumetitle === "") {
-    Resume.find({})
-      .sort("-updatedAt")
-      .exec((err, resumes) => {
+    User.findOne({ username: user.username })
+
+      .populate({ path: "resumes", sort: { updatedAt: -1 } })
+      // .populate({
+      //   path: "resumes",
+      //   // sort: { updatedAt: 1 },
+      // })
+      .exec((err, user) => {
+        // console.log(resumes);
+        if (err)
+          res.status(500).json({
+            message: err.message,
+          });
         // console.log(req.session.user);
-        res.json({
-          // user: req.session.user,
-          resumes: resumes,
-        });
+        else
+          res.json({
+            // user: req.session.user,
+            resumes: user.resumes,
+          });
       });
-  } else {
-    Resume.find({ resumetitle: { $regex: resumetitle, $options: "i" } })
+  }
+  // Resume.find({ user: user._id })
+  //   .sort("-updatedAt")
+  //   .exec((err, resumes) => {
+  //     // console.log(req.session.user);
+  //     res.json({
+  //       // user: req.session.user,
+  //       resumes: resumes,
+  //     });
+  //   });
+  else {
+    Resume.find({
+      user: user._id,
+      resumetitle: { $regex: resumetitle, $options: "i" },
+    })
       .sort("-updatedAt")
       .exec((err, resumes) => {
         res.json({
@@ -89,8 +115,36 @@ app.get("/resumes", (req, res) => {
   }
 });
 
+// User.aggregate([{
+//   "$match": {
+//       "_id": new mongoose.mongo.ObjectId("58c7fa6987200dfc592d088c")
+//   }
+// }, {
+//   "$unwind": "$Items"
+// }, {
+//   "$sort": {
+//       "Items.createdAt": -1
+//   }
+// }, {
+//   "$group": {
+//       "Items": {
+//           "$push": "$Items"
+//       },
+//       "_id": 1
+//   }
+// }, {
+//   "$project": {
+//       "_id": 0,
+//       "Items": 1
+//   }
+// }], function(err, res) {
+//   console.log(res);
+// })
+
 app.post("/resume/add", (req, res) => {
+  // console.log(req.session.user._id);
   const resume = new Resume({
+    user: req.body.user._id,
     resumetitle: req.body.resumetitle,
     name: req.body.name,
     title: req.body.title,
@@ -105,8 +159,20 @@ app.post("/resume/add", (req, res) => {
         message: err.message,
       });
     } else {
-      console.log(savedResume);
-      res.json(savedResume);
+      User.findByIdAndUpdate(
+        req.body.user._id,
+        { $push: { resumes: savedResume._id } },
+        function (err) {
+          if (err) {
+            res.status(500).json({
+              message: err.message,
+            });
+          } else {
+            console.log(savedResume);
+            res.json(savedResume);
+          }
+        }
+      );
     }
   });
 });
