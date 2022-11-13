@@ -47,3 +47,7 @@
 .selected {
   border: 2px dashed black;
 }
+
+input[type="file"] {
+  display: none;
+}

@@ -7,6 +7,9 @@ import Button from "react-bootstrap/Button";
 import { getBaseURL, getCurrentUser } from "../http.js";
 import { withRouter } from "../with-router";
 import { Navigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import FileBase64 from "react-file-base64";
 
 class Add extends Component {
   constructor(props) {
@@ -14,13 +17,14 @@ class Add extends Component {
     this.onChangeResumeTitle = this.onChangeResumeTitle.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
-    //this.onChangePhoto = this.onChangePhoto.bind(this);
+    this.onChangePhoto = this.onChangePhoto.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePhone = this.onChangePhone.bind(this);
     this.onChangeLoc = this.onChangeLoc.bind(this);
     this.onChangeDetail = this.onChangeDetail.bind(this);
     this.addDetail = this.addDetail.bind(this);
     this.removeDetail = this.removeDetail.bind(this);
+    this.addSection = this.addSection.bind(this);
     //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
     this.saveResume = this.saveResume.bind(this);
 
@@ -28,11 +32,12 @@ class Add extends Component {
       resumetitle: "",
       name: "",
       title: "",
-      //photo: null,
+      photo: "",
       email: "",
       phone: "",
       loc: "",
       details: [],
+      sections: [],
       //published: false,
       submitted: false,
       redirect: false,
@@ -50,14 +55,22 @@ class Add extends Component {
       resumetitle: e.target.value,
     });
   }
+
   onChangeName(e) {
     this.setState({
       name: e.target.value,
     });
   }
+
   onChangeTitle(e) {
     this.setState({
       title: e.target.value,
+    });
+  }
+
+  onChangePhoto(base64) {
+    this.setState({
+      photo: base64,
     });
   }
 
@@ -95,11 +108,35 @@ class Add extends Component {
     this.setState({ details: this.state.details });
   }
 
+  addSection() {
+    this.setState({
+      sections: [...this.state.sections, { name: "", items: [] }],
+    });
+  }
+
+  removeSection(i) {
+    this.state.sections.splice(i, 1);
+    this.setState({ sections: this.state.sections });
+  }
+
+  onChangeSectionName(i, e) {
+    this.state.sections[i]["name"] = e.target.value;
+    this.setState({ sections: this.state.sections });
+  }
+
+  addItem(i, eventKey) {
+    // console.log("changed");
+    this.state.sections[i]["items"]["type"] = eventKey;
+    // console.log(this.state.sections[i]["subsection"]["type"]);
+    this.setState({ sections: this.state.sections });
+  }
+
   saveResume() {
     const data = {
       resumetitle: this.state.resumetitle,
       name: this.state.name,
       title: this.state.title,
+      photo: this.state.photo,
       email: this.state.email,
       phone: this.state.phone,
       loc: this.state.loc,
@@ -125,6 +162,7 @@ class Add extends Component {
           resumetitle: data.resumetitle,
           name: data.name,
           title: data.title,
+          photo: data.photo,
           email: data.email,
           phone: data.phone,
           loc: data.loc,
@@ -174,15 +212,80 @@ class Add extends Component {
           </Row>
           <hr />
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridName">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control type="text" required onChange={this.onChangeName} />
-            </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridJobTitle">
-              <Form.Label>Job Title</Form.Label>
-              <Form.Control type="text" onChange={this.onChangeTitle} />
-            </Form.Group>
+            <Col md={5}>
+              <Form.Group controlId="formGridName">
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  onChange={this.onChangeName}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={2}>
+              <Form.Group
+                controlId="formFile"
+                className="d-flex justify-content-center text-center mt-1"
+              >
+                {this.state.photo ? (
+                  <img
+                    className="photo"
+                    src={this.state.photo}
+                    style={{
+                      borderRadius: "50%",
+                      maxHeight: "200px",
+                      height: "auto",
+                      width: "100px",
+                      cursor: "pointer",
+                      display: "block",
+                    }}
+                    onClick={() => {
+                      document
+                        .querySelector('.photoInput input[type="file"]')
+                        .click();
+                    }}
+                  />
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="80"
+                    fill="currentColor"
+                    className="bi bi-person-circle"
+                    viewBox="0 0 16 16"
+                    style={{
+                      cursor: "pointer",
+                      color: "lightgray",
+                      display: "block",
+                    }}
+                    onClick={() => {
+                      document
+                        .querySelector('.photoInput input[type="file"]')
+                        .click();
+                    }}
+                  >
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                    <path
+                      fillRule="evenodd"
+                      d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                    />
+                  </svg>
+                )}
+                <div className="photoInput">
+                  <FileBase64
+                    type="file"
+                    multiple={false}
+                    onDone={({ base64 }) => this.onChangePhoto(base64)}
+                  />
+                </div>
+              </Form.Group>
+            </Col>
+            <Col md={5}>
+              <Form.Group controlId="formGridJobTitle">
+                <Form.Label>Job Title</Form.Label>
+                <Form.Control type="text" onChange={this.onChangeTitle} />
+              </Form.Group>
+            </Col>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridEmail">
@@ -245,6 +348,78 @@ class Add extends Component {
             </Button>
           </div>
           <hr />
+
+          {this.state.sections.map((element, index) => (
+            <div key={index}>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Section Name"
+                    value={element.name || ""}
+                    onChange={(e) => this.onChangeSectionName(index, e)}
+                  />
+                </Col>
+                {/* <Col>
+                  <Form.Control
+                    type="text"
+                    name="value"
+                    placeholder="Value"
+                    value={element.value || ""}
+                    onChange={(e) => this.onChangeDetail(index, e)}
+                  />
+                </Col> */}
+                <Col>
+                  <Button
+                    variant="danger"
+                    type="button"
+                    className="button remove"
+                    onClick={() => this.removeSection(index)}
+                  >
+                    Remove
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <DropdownButton
+                    title="Add an item"
+                    onSelect={(eventKey) => this.addItem(index, eventKey)}
+                    variant="secondary"
+                  >
+                    <Dropdown.Item eventKey="entry">
+                      Entry with Date, Loc, and Description
+                    </Dropdown.Item>
+                    <Dropdown.Item eventKey="list">List</Dropdown.Item>
+                    <Dropdown.Item eventKey="tags">
+                      Collection of Tags
+                    </Dropdown.Item>
+                    <Dropdown.Item eventKey="pair">
+                      Name Value Pair
+                    </Dropdown.Item>
+                    <Dropdown.Item eventKey="text">Text Field</Dropdown.Item>
+                  </DropdownButton>
+                  {/*     
+                  <Form.Select
+                    aria-label="type"
+                    onChange={(e) => this.onChangeSubsectionType(index, e)}
+                  >
+                    <option value="">Choose a type for your subsection</option>
+                    <option value="entry">
+                      Entry with Date, Loc, and Description
+                    </option>
+                    <option value="list"> + List</option>
+                    <option value="tags"> + Collection of Tags</option>
+                    <option value="pair"> + Name Value Pair</option>
+                    <option value="text"> + Text Field</option>
+                  </Form.Select> */}
+                </Col>
+              </Row>
+              <hr />
+            </div>
+          ))}
+
           <Row>
             <Button
               variant="outline-secondary"

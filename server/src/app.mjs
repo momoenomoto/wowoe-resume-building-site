@@ -80,7 +80,7 @@ app.get("/resumes", (req, res) => {
   if (resumetitle === "") {
     User.findOne({ username: user.username })
 
-      .populate({ path: "resumes", sort: { updatedAt: -1 } })
+      .populate({ path: "resumes", options: { sort: { updatedAt: -1 } } })
       // .populate({
       //   path: "resumes",
       //   // sort: { updatedAt: 1 },
@@ -130,6 +130,7 @@ app.post("/resume/add", (req, res) => {
     resumetitle: req.body.resumetitle,
     name: req.body.name,
     title: req.body.title,
+    photo: req.body.photo,
     email: req.body.email,
     phone: req.body.phone,
     loc: req.body.loc,
@@ -150,7 +151,7 @@ app.post("/resume/add", (req, res) => {
               message: err.message,
             });
           } else {
-            console.log(savedResume);
+            // console.log(savedResume);
             res.json(savedResume);
           }
         }
@@ -209,7 +210,7 @@ app.post("/login", (req, res) => {
       if (err) {
         res.json({ message: "error starting auth sess: " + err });
       } else {
-        console.log(req.session.user);
+        // console.log(req.session.user);
         res.json({ user: req.session.user });
         // res.redirect("/");
       }

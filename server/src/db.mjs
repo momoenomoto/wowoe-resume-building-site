@@ -25,10 +25,7 @@ const ResumeSchema = new mongoose.Schema(
     resumetitle: { type: String, required: true },
     name: String,
     title: String,
-    // photo: {
-    //   data: Buffer,
-    //   contentType: String,
-    // },
+    photo: String,
     email: String,
     phone: String,
     loc: String,

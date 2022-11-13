@@ -14,7 +14,7 @@ class Resume extends Component {
         resumetitle: "",
         name: "",
         title: "",
-        //photo: null,
+        photo: "",
         email: "",
         phone: "",
         loc: "",
@@ -54,35 +54,50 @@ class Resume extends Component {
     }
     return (
       <>
-        <h1 style={{ fontWeight: "bold" }}>{this.state.currentResume.name}</h1>
-
+        <h1 style={{ fontWeight: "bold", display: "inline-block" }}>
+          {this.state.currentResume.name}
+        </h1>{" "}
+        <img
+          className="photo"
+          src={this.state.currentResume.photo}
+          style={{
+            borderRadius: "50%",
+            maxHeight: "200px",
+            height: "auto",
+            width: "100px",
+            // cursor: "pointer",
+            display: "inline-block",
+          }}
+        />
         <div
           style={{
             width: "90vw",
             height: "10px",
             backgroundColor: "lightgray",
-            position: "absolute",
-            top: "155px",
             color: "black",
           }}
         ></div>
-        <div
-          style={{
-            backgroundColor: "lightgray",
-            height: "40px",
-            textAlign: "center",
-            maxWidth: "max-content",
-            padding: "5px 10px",
-            fontSize: "20px",
-            color: "white",
-            position: "absolute",
-            right: "70px",
-            top: "140px",
-            fontWeight: "bold",
-          }}
-        >
-          {this.state.currentResume.title}
-        </div>
+        {this.state.currentResume.title ? (
+          <div
+            style={{
+              backgroundColor: "lightgray",
+              height: "40px",
+              textAlign: "center",
+              maxWidth: "max-content",
+              padding: "5px 10px",
+              fontSize: "20px",
+              color: "white",
+              position: "relative",
+              // right: "70px",
+              // right: "70px",
+              // top: "140px",
+              fontWeight: "bold",
+              display: "inline-block",
+            }}
+          >
+            {this.state.currentResume.title}
+          </div>
+        ) : null}
         <div
           className="resumeContent"
           style={{ position: "relative", top: "50px" }}
