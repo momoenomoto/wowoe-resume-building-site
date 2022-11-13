@@ -128,7 +128,7 @@ class Add extends Component {
 
   addSection() {
     this.setState({
-      sections: [...this.state.sections, { name: "", items: [] }],
+      sections: [...this.state.sections, { name: "" }],
     });
   }
 
@@ -145,7 +145,7 @@ class Add extends Component {
 
   addItem(i, eventKey) {
     const temp = [...this.state.sections];
-    temp[i] = { ...temp[i], items: [{ type: eventKey, data: [] }] };
+    temp[i] = { ...temp[i], items: [{ type: eventKey }] };
 
     // this.state.sections[i]["items"]["type"] = eventKey;
     // console.log(this.state.sections[i]["subsection"]["type"]);
@@ -162,6 +162,7 @@ class Add extends Component {
       phone: this.state.phone,
       loc: this.state.loc,
       details: this.state.details,
+      sections: this.state.sections,
       user: getCurrentUser(),
     };
 
@@ -188,6 +189,7 @@ class Add extends Component {
           phone: data.phone,
           loc: data.loc,
           details: data.details,
+          sections: data.sections,
           //published: response.data.published,
           submitted: true,
         });

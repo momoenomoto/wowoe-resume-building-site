@@ -134,6 +134,7 @@ app.post("/resume/add", (req, res) => {
     phone: req.body.phone,
     loc: req.body.loc,
     details: req.body.details,
+    sections: req.body.sections,
   });
   console.log(resume);
   resume.save((err, savedResume) => {

@@ -19,6 +19,16 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const ItemSchema = new mongoose.Schema({
+  type: String,
+  data: [String],
+});
+
+const SectionSchema = new mongoose.Schema({
+  name: String,
+  items: [ItemSchema],
+});
+
 const ResumeSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -35,20 +45,10 @@ const ResumeSchema = new mongoose.Schema(
         value: String,
       },
     ],
-    sections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Section" }],
+    sections: [SectionSchema],
   },
   { timestamps: true }
 );
-
-const ItemSchema = new mongoose.Schema({
-  type: String,
-  data: [String],
-});
-
-const SectionSchema = new mongoose.Schema({
-  name: String,
-  items: [ItemSchema],
-});
 
 ResumeSchema.method("toJSON", function () {
   const { __v, _id, ...object } = this.toObject();
