@@ -121,7 +121,10 @@ class Auth extends Component {
           this.setState({
             isSubmitting: false,
           });
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ username: data.user.username })
+          );
           this.props.router.navigate("/resumes");
           window.location.reload();
         } else {

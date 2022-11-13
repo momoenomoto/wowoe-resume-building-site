@@ -143,8 +143,8 @@ app.post("/resume/add", (req, res) => {
         message: err.message,
       });
     } else {
-      User.findByIdAndUpdate(
-        req.body.user._id,
+      User.findOneAndUpdate(
+        {username: req.body.user.username},
         { $push: { resumes: savedResume._id } },
         function (err) {
           if (err) {
