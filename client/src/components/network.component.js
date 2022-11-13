@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { getBaseURL } from "../http.js";
 
 export default class Network extends Component {

@@ -9,7 +9,7 @@ import { withRouter } from "../with-router";
 import { Navigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import FileBase64 from "react-file-base64";
+// import FileBase64 from "react-file-base64";
 
 class Add extends Component {
   constructor(props) {
@@ -50,6 +50,19 @@ class Add extends Component {
     if (!currentUser) this.setState({ redirect: "/" });
   }
 
+  convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  }
+
   onChangeResumeTitle(e) {
     this.setState({
       resumetitle: e.target.value,
@@ -68,7 +81,10 @@ class Add extends Component {
     });
   }
 
-  onChangePhoto(base64) {
+  async onChangePhoto(e) {
+    const file = e.target.files[0];
+    const base64 = await this.convertToBase64(file);
+
     this.setState({
       photo: base64,
     });
@@ -96,6 +112,7 @@ class Add extends Component {
     this.setState({
       details: [...this.state.details, { name: "", value: "" }],
     });
+    this.detailId++;
   }
 
   removeDetail(i) {
@@ -104,8 +121,9 @@ class Add extends Component {
   }
 
   onChangeDetail(i, e) {
-    this.state.details[i][e.target.name] = e.target.value;
-    this.setState({ details: this.state.details });
+    const temp = [...this.state.details];
+    temp[i] = { ...temp[i], [e.target.name]: e.target.value };
+    this.setState({ details: temp });
   }
 
   addSection() {
@@ -120,15 +138,18 @@ class Add extends Component {
   }
 
   onChangeSectionName(i, e) {
-    this.state.sections[i]["name"] = e.target.value;
-    this.setState({ sections: this.state.sections });
+    const temp = [...this.state.sections];
+    temp[i] = { ...temp[i], name: e.target.value };
+    this.setState({ sections: temp });
   }
 
   addItem(i, eventKey) {
-    // console.log("changed");
-    this.state.sections[i]["items"]["type"] = eventKey;
+    const temp = [...this.state.sections];
+    temp[i] = { ...temp[i], items: [{ type: eventKey, data: [] }] };
+
+    // this.state.sections[i]["items"]["type"] = eventKey;
     // console.log(this.state.sections[i]["subsection"]["type"]);
-    this.setState({ sections: this.state.sections });
+    this.setState({ sections: temp });
   }
 
   saveResume() {
@@ -231,18 +252,17 @@ class Add extends Component {
                   <img
                     className="photo"
                     src={this.state.photo}
+                    alt=""
                     style={{
                       borderRadius: "50%",
-                      maxHeight: "200px",
+                      maxHeight: "100px",
                       height: "auto",
                       width: "100px",
                       cursor: "pointer",
                       display: "block",
                     }}
                     onClick={() => {
-                      document
-                        .querySelector('.photoInput input[type="file"]')
-                        .click();
+                      document.querySelector(".photoUpload").click();
                     }}
                   />
                 ) : (
@@ -259,9 +279,7 @@ class Add extends Component {
                       display: "block",
                     }}
                     onClick={() => {
-                      document
-                        .querySelector('.photoInput input[type="file"]')
-                        .click();
+                      document.querySelector(".photoUpload").click();
                     }}
                   >
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
@@ -271,13 +289,22 @@ class Add extends Component {
                     />
                   </svg>
                 )}
-                <div className="photoInput">
+                <input
+                  className="photoUpload"
+                  type="file"
+                  label="Image"
+                  name="myFile"
+                  accept=".jpeg, .png, .jpg"
+                  style={{ display: "none" }}
+                  onChange={(e) => this.onChangePhoto(e)}
+                />
+                {/* <div className="photoInput">
                   <FileBase64
                     type="file"
                     multiple={false}
                     onDone={({ base64 }) => this.onChangePhoto(base64)}
                   />
-                </div>
+                </div> */}
               </Form.Group>
             </Col>
             <Col md={5}>
@@ -311,7 +338,7 @@ class Add extends Component {
                     type="text"
                     name="name"
                     placeholder="Name"
-                    value={element.name || ""}
+                    // value={element.name || ""}
                     onChange={(e) => this.onChangeDetail(index, e)}
                   />
                 </Col>
@@ -320,7 +347,7 @@ class Add extends Component {
                     type="text"
                     name="value"
                     placeholder="Value"
-                    value={element.value || ""}
+                    // value={element.value || ""}
                     onChange={(e) => this.onChangeDetail(index, e)}
                   />
                 </Col>
@@ -357,7 +384,7 @@ class Add extends Component {
                     type="text"
                     name="name"
                     placeholder="Section Name"
-                    value={element.name || ""}
+                    // value={element.name || ""}
                     onChange={(e) => this.onChangeSectionName(index, e)}
                   />
                 </Col>

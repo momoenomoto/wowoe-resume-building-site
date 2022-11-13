@@ -32,9 +32,8 @@ const registrationMessages = {
 
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb", extended: true }));
 //app.set("view engine", "hbs");
 // app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.urlencoded({ extended: false }));
@@ -136,6 +135,7 @@ app.post("/resume/add", (req, res) => {
     loc: req.body.loc,
     details: req.body.details,
   });
+  console.log(resume);
   resume.save((err, savedResume) => {
     if (err) {
       res.status(500).json({

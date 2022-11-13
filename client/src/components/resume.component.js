@@ -60,6 +60,7 @@ class Resume extends Component {
         <img
           className="photo"
           src={this.state.currentResume.photo}
+          alt=""
           style={{
             borderRadius: "50%",
             maxHeight: "200px",

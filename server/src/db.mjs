@@ -40,16 +40,14 @@ const ResumeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const SubSectionSchema = new mongoose.Schema({
-  name: String,
+const ItemSchema = new mongoose.Schema({
   type: String,
-  data: String,
+  data: [String],
 });
 
 const SectionSchema = new mongoose.Schema({
   name: String,
-  subsections: [SubSectionSchema],
-  data: String,
+  items: [ItemSchema],
 });
 
 ResumeSchema.method("toJSON", function () {
@@ -64,7 +62,7 @@ UserSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=username%>" });
 mongoose.model("User", UserSchema);
 mongoose.model("Resume", ResumeSchema);
 mongoose.model("Section", SectionSchema);
-mongoose.model("SubSection", SubSectionSchema);
+mongoose.model("Item", ItemSchema);
 
 let dbconf;
 if (process.env.NODE_ENV === "PRODUCTION") {

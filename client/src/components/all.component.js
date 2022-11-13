@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { getBaseURL, getCurrentUser } from "../http.js";
 import icon from "../img/resume_icon.jpg";
 import { withRouter } from "../with-router";
@@ -191,6 +190,7 @@ class AllResumes extends Component {
                       (index === this.state.currentIndex ? "selected" : "")
                     }
                     key={index}
+                    style={{ cursor: "pointer" }}
                     onClick={() => this.setActiveResume(resume, index)}
                   >
                     <img
