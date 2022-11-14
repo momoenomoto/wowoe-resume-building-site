@@ -25,6 +25,7 @@ class Add extends Component {
     this.addDetail = this.addDetail.bind(this);
     this.removeDetail = this.removeDetail.bind(this);
     this.addSection = this.addSection.bind(this);
+    this.addItem = this.addItem.bind(this);
     //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
     this.saveResume = this.saveResume.bind(this);
 
@@ -128,7 +129,7 @@ class Add extends Component {
 
   addSection() {
     this.setState({
-      sections: [...this.state.sections, { name: "" }],
+      sections: [...this.state.sections, { name: "", items: [] }],
     });
   }
 
@@ -143,13 +144,31 @@ class Add extends Component {
     this.setState({ sections: temp });
   }
 
-  addItem(i, eventKey) {
-    const temp = [...this.state.sections];
-    temp[i] = { ...temp[i], items: [{ type: eventKey }] };
+  addItem(sectionIdx, eventKey) {
+    // console.log(eventKey);
+    document.querySelector(".addItemBtn").style.display = "none";
 
-    // this.state.sections[i]["items"]["type"] = eventKey;
-    // console.log(this.state.sections[i]["subsection"]["type"]);
-    this.setState({ sections: temp });
+    this.setState((prevState) => {
+      const temp = {
+        ...prevState,
+        sections: [...prevState.sections],
+      };
+
+      temp.sections[sectionIdx].items = [
+        ...temp.sections[sectionIdx].items,
+        { type: eventKey },
+      ];
+
+      return temp;
+    });
+  }
+
+  deleteItem(sectionIdx, itemIdx) {
+    if (this.state.sections[sectionIdx].items.length === 1) {
+      document.querySelector(".addItemBtn").style.display = "inline-block";
+    }
+    this.state.sections[sectionIdx].items.splice(itemIdx, 1);
+    this.setState({ sections: this.state.sections });
   }
 
   saveResume() {
@@ -410,9 +429,244 @@ class Add extends Component {
                   </Button>
                 </Col>
               </Row>
+              {Object.keys(this.state.sections[index].items).map(
+                (key, itemIdx) =>
+                  this.state.sections[index].items[itemIdx].type === "entry" ? (
+                    <div key={itemIdx}>
+                      <div>
+                        <Row className="mb-3">
+                          <Form.Group as={Col}>
+                            <Form.Label>
+                              Job title, school, activity name, etc
+                            </Form.Label>
+                            <Form.Control type="text" />
+                          </Form.Group>
+
+                          <Form.Group as={Col}>
+                            <Form.Label>
+                              Employer, degree, organization, etc
+                            </Form.Label>
+                            <Form.Control type="text" />
+                          </Form.Group>
+                        </Row>
+                        <Row className="mb-3">
+                          <Col xs={3}>
+                            <Form.Group as={Col}>
+                              <Form.Label>Start Date</Form.Label>
+                              <Form.Control type="date" />
+                            </Form.Group>
+                          </Col>
+                          <Col xs={3}>
+                            <Form.Group as={Col}>
+                              <Form.Label>End Date</Form.Label>
+                              <Form.Control type="date" />
+                            </Form.Group>
+                          </Col>
+                          <Form.Group as={Col}>
+                            <Form.Label>Location</Form.Label>
+                            <Form.Control type="text" />
+                          </Form.Group>
+                        </Row>
+                        <Form.Label>Description</Form.Label>
+                        <textarea
+                          as={Col}
+                          className="form-control mb-3"
+                          name="text"
+                          rows="3"
+                        ></textarea>
+                      </div>
+                      <div className="col">
+                        <Button
+                          className="mb-3"
+                          style={{
+                            display: "inline-block",
+                          }}
+                          variant="outline-danger"
+                          onClick={() => this.deleteItem(index, itemIdx)}
+                        >
+                          -
+                        </Button>
+                        {itemIdx ===
+                          this.state.sections[index].items.length - 1 && (
+                          <Button
+                            className="mb-3"
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-primary"
+                            onClick={() => this.addItem(index, "entry")}
+                          >
+                            +
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ) : this.state.sections[index].items[itemIdx].type ===
+                    "list" ? (
+                    <div className="input-group mb-3 w-50" key={itemIdx}>
+                      <div className="input-group-prepend">
+                        <span className="input-group-text">&#8226;</span>
+                      </div>
+                      <Form.Control
+                        type="text"
+                        className="mb-3"
+                        placeholder="Enter list item"
+                        style={{
+                          width: "20%",
+                          minWidth: "300px",
+                          display: "inline-block",
+                        }}
+                      ></Form.Control>
+                      <div className="input-group-append">
+                        <Button
+                          style={{
+                            display: "inline-block",
+                          }}
+                          variant="outline-danger"
+                          onClick={() => this.deleteItem(index, itemIdx)}
+                        >
+                          -
+                        </Button>
+                      </div>
+
+                      {itemIdx ===
+                        this.state.sections[index].items.length - 1 && (
+                        <div className="input-group-append">
+                          <Button
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-primary"
+                            onClick={() => this.addItem(index, "list")}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ) : this.state.sections[index].items[itemIdx].type ===
+                    "tags" ? (
+                    <div
+                      className="input-group w-25"
+                      key={itemIdx}
+                      style={{ float: "left" }}
+                    >
+                      <Form.Control
+                        type="text"
+                        className="mb-3"
+                        placeholder="Enter tag"
+                        style={{
+                          width: "10%",
+                          minWidth: "100px",
+                          display: "inline-block",
+                        }}
+                      ></Form.Control>
+                      <div className="input-group-append">
+                        <Button
+                          style={{
+                            display: "inline-block",
+                          }}
+                          variant="outline-danger"
+                          onClick={() => this.deleteItem(index, itemIdx)}
+                        >
+                          -
+                        </Button>
+                      </div>
+
+                      {itemIdx ===
+                        this.state.sections[index].items.length - 1 && (
+                        <div className="input-group-append">
+                          <Button
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-primary"
+                            onClick={() => this.addItem(index, "tags")}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ) : this.state.sections[index].items[itemIdx].type ===
+                    "pair" ? (
+                    <div className="input-group" key={itemIdx}>
+                      <div className="row">
+                        <div className="col">
+                          <Form.Control
+                            type="text"
+                            class="mb-3"
+                            placeholder="Enter name"
+                            aria-label="name"
+                            style={{ width: "200px" }}
+                          ></Form.Control>
+                        </div>
+                        :
+                        <div className="col">
+                          <Form.Control
+                            type="text"
+                            class="mb-3"
+                            placeholder="Enter value"
+                            aria-label="value"
+                            style={{ width: "600px" }}
+                          ></Form.Control>
+                        </div>
+                        <div className="col">
+                          <Button
+                            className="mb-3"
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-danger"
+                            onClick={() => this.deleteItem(index, itemIdx)}
+                          >
+                            -
+                          </Button>
+                        </div>
+                      </div>
+
+                      {itemIdx ===
+                        this.state.sections[index].items.length - 1 && (
+                        <div className="input-group-append">
+                          <Button
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-primary"
+                            onClick={() => this.addItem(index, "pair")}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ) : this.state.sections[index].items[itemIdx].type ===
+                    "text" ? (
+                    <div>
+                      <textarea
+                        className="form-control mb-3"
+                        name="text"
+                        rows="3"
+                        placeholder="Enter text"
+                        key={itemIdx}
+                      ></textarea>
+                      <Button
+                        style={{
+                          display: "inline-block",
+                        }}
+                        variant="outline-danger"
+                        onClick={() => this.deleteItem(index, itemIdx)}
+                      >
+                        -
+                      </Button>
+                    </div>
+                  ) : null
+              )}
+
               <Row>
                 <Col>
                   <DropdownButton
+                    className="addItemBtn"
                     title="Add an item"
                     onSelect={(eventKey) => this.addItem(index, eventKey)}
                     variant="secondary"
@@ -445,7 +699,9 @@ class Add extends Component {
                   </Form.Select> */}
                 </Col>
               </Row>
-              <hr />
+              <div style={{ clear: "left" }}>
+                <hr />
+              </div>
             </div>
           ))}
 
@@ -463,7 +719,7 @@ class Add extends Component {
             <Button
               type="submit"
               onClick={this.saveResume}
-              className="btn btn-success"
+              className="btn btn-success mb-3"
             >
               Save
             </Button>

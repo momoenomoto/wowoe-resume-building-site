@@ -47,3 +47,16 @@
 .selected {
   border: 2px dashed black;
 }
+
+.intro {
+  /* background-image: url("img/background.jpg"); */
+  position: relative;
+  /* top: 300px; */
+  max-width: 100%;
+  height: auto;
+  width: 100%;
+  left: 0;
+  color: white;
+  text-align: center;
+  /* padding-bottom: 500px; */
+}

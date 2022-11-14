@@ -82,11 +82,11 @@ class App extends Component {
             {this.state.currentUser ? (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
+                  <div className="nav-link">
                     {this.state.currentUser.username}
-                  </Link>
+                  </div>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" style={{ border: "1px solid gray" }}>
                   <Link to={"/"} className="nav-link" onClick={this.logOut}>
                     Logout
                   </Link>

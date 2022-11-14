@@ -19,15 +19,64 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ItemSchema = new mongoose.Schema({
-  type: String,
-  data: [String],
-});
+const ItemSchema = new mongoose.Schema(
+  {
+    type: String,
+  },
+  { discriminatorKey: "type", _id: false }
+);
 
-const SectionSchema = new mongoose.Schema({
-  name: String,
-  items: [ItemSchema],
-});
+const ListSchema = new mongoose.Schema(
+  {
+    data: [String],
+  },
+  { _id: false }
+);
+
+const TextSchema = new mongoose.Schema(
+  {
+    data: String,
+  },
+  { _id: false }
+);
+
+const PairSchema = new mongoose.Schema(
+  {
+    data: [
+      {
+        name: String,
+        value: String,
+      },
+      { _id: false },
+    ],
+  },
+  { _id: false }
+);
+
+const EntrySchema = new mongoose.Schema(
+  {
+    data: [
+      {
+        name: String,
+        detail: String,
+        startDate: String,
+        endDate: String,
+        location: String,
+        description: String,
+      },
+      { _id: false },
+    ],
+  },
+  { _id: false }
+);
+
+const SectionSchema = new mongoose.Schema(
+  {
+    name: String,
+    items: [ItemSchema],
+  },
+  { _id: false }
+);
 
 const ResumeSchema = new mongoose.Schema(
   {
@@ -44,6 +93,7 @@ const ResumeSchema = new mongoose.Schema(
         name: String,
         value: String,
       },
+      { _id: false },
     ],
     sections: [SectionSchema],
   },
@@ -58,6 +108,12 @@ ResumeSchema.method("toJSON", function () {
 
 ResumeSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=resumetitle%>" });
 UserSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=username%>" });
+
+ResumeSchema.path("sections").discriminator("entry", EntrySchema);
+ResumeSchema.path("sections").discriminator("list", ListSchema);
+ResumeSchema.path("sections").discriminator("tags", ListSchema);
+ResumeSchema.path("sections").discriminator("pair", PairSchema);
+ResumeSchema.path("sections").discriminator("text", TextSchema);
 
 mongoose.model("User", UserSchema);
 mongoose.model("Resume", ResumeSchema);

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { getBaseURL } from "../http.js";
+import background from "../img/background.jpg";
+import Button from "react-bootstrap/Button";
 
 export default class Network extends Component {
   constructor(props) {
@@ -41,15 +43,68 @@ export default class Network extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div style={{ position: "relative" }}>
+        <img
+          alt=""
+          className="block mb-3"
+          src={background}
+          style={{
+            position: "relative",
+            // top: "76px",
+            // maxWidth: "100%",
+            // height: "auto",
+            width: "100%",
+            backgroundSize: "cover",
+            // left: "-90px",
+          }}
+        />
+
+        <h1
+          className="intro"
+          style={{
+            position: "absolute",
+            top: "25%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            // marginTop: "500px",
+          }}
+        >
+          WOWOE
+          <br />
+          Online Resume Builder
+          <br />
+          <Button
+            href="/auth"
+            type="button"
+            variant="outline-dark"
+            style={{ background: "pink", borderColor: "pink" }}
+          >
+            Build Your Own Resume
+          </Button>
+        </h1>
+        <span
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "white",
+            textAlign: "center",
+            // marginTop: "500px",
+          }}
+        >
+          or scroll down to view the network
+        </span>
+        {/* <div style={{ position: "relative" }}></div> */}
         {/* {this.state.message}! Try logging in to see more. */}
-        <div>
+
+        <div style={{ marginTop: "auto" }}>
           <h2 className="d-inline-block">Network</h2>
           <div
             className="d-inline-block"
             style={{
               position: "relative",
-              top: "-5px",
+              // top: "-5px",
               left: "30px",
               width: "25vw",
             }}
