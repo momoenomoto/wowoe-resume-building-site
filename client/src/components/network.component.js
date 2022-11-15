@@ -7,6 +7,9 @@ export default class Network extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearch = this.onChangeSearch.bind(this);
+    this.executeScroll = this.executeScroll.bind(this);
+
+    this.networkRef = React.createRef();
 
     this.state = {
       users: [],
@@ -39,6 +42,10 @@ export default class Network extends Component {
     this.setState({
       search: search,
     });
+  }
+
+  executeScroll() {
+    this.networkRef.current.scrollIntoView(true);
   }
 
   render() {
@@ -94,12 +101,35 @@ export default class Network extends Component {
           }}
         >
           or scroll down to view the network
+          <br />
+          <button
+            type="button"
+            className="btn btn-default"
+            onClick={this.executeScroll}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="white"
+              className="bi bi-arrow-down-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"
+              />
+            </svg>
+          </button>
         </span>
+
         {/* <div style={{ position: "relative" }}></div> */}
         {/* {this.state.message}! Try logging in to see more. */}
 
         <div style={{ marginTop: "auto" }}>
-          <h2 className="d-inline-block">Network</h2>
+          <h2 className="d-inline-block" ref={this.networkRef}>
+            Network
+          </h2>
           <div
             className="d-inline-block"
             style={{

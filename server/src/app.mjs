@@ -122,7 +122,7 @@ app.get("/resumes", (req, res) => {
 });
 
 app.post("/resume/add", (req, res) => {
-  // console.log(req.session.user._id);
+  // console.log(req.body.sections[0].items[0]);
   const resume = new Resume({
     user: req.body.user._id,
     resumetitle: req.body.resumetitle,
@@ -143,7 +143,7 @@ app.post("/resume/add", (req, res) => {
       });
     } else {
       User.findOneAndUpdate(
-        {username: req.body.user.username},
+        { username: req.body.user.username },
         { $push: { resumes: savedResume._id } },
         function (err) {
           if (err) {

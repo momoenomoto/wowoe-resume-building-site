@@ -19,13 +19,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ItemSchema = new mongoose.Schema(
-  {
-    type: String,
-  },
-  { discriminatorKey: "type", _id: false }
-);
-
 const ListSchema = new mongoose.Schema(
   {
     data: [String],
@@ -57,7 +50,7 @@ const EntrySchema = new mongoose.Schema(
   {
     data: [
       {
-        name: String,
+        title: String,
         detail: String,
         startDate: String,
         endDate: String,
@@ -73,9 +66,9 @@ const EntrySchema = new mongoose.Schema(
 const SectionSchema = new mongoose.Schema(
   {
     name: String,
-    items: [ItemSchema],
+    type: String,
   },
-  { _id: false }
+  { discriminatorKey: "type", _id: false }
 );
 
 const ResumeSchema = new mongoose.Schema(
@@ -109,16 +102,15 @@ ResumeSchema.method("toJSON", function () {
 ResumeSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=resumetitle%>" });
 UserSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=username%>" });
 
-ResumeSchema.path("sections").discriminator("entry", EntrySchema);
-ResumeSchema.path("sections").discriminator("list", ListSchema);
-ResumeSchema.path("sections").discriminator("tags", ListSchema);
-ResumeSchema.path("sections").discriminator("pair", PairSchema);
-ResumeSchema.path("sections").discriminator("text", TextSchema);
+SectionSchema.discriminator("entry", EntrySchema);
+SectionSchema.discriminator("list", ListSchema);
+SectionSchema.discriminator("tags", ListSchema);
+SectionSchema.discriminator("pair", PairSchema);
+SectionSchema.discriminator("text", TextSchema);
 
 mongoose.model("User", UserSchema);
 mongoose.model("Resume", ResumeSchema);
 mongoose.model("Section", SectionSchema);
-mongoose.model("Item", ItemSchema);
 
 let dbconf;
 if (process.env.NODE_ENV === "PRODUCTION") {

@@ -25,8 +25,13 @@ class Add extends Component {
     this.addDetail = this.addDetail.bind(this);
     this.removeDetail = this.removeDetail.bind(this);
     this.addSection = this.addSection.bind(this);
+    this.removeSection = this.removeSection.bind(this);
+    this.onChangeSectionName = this.onChangeSectionName.bind(this);
     this.addItem = this.addItem.bind(this);
-    //this.onChangeLastEdited = this.onChangeLastEdited.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+    this.onChangeText = this.onChangeText.bind(this);
+    this.onChangeList = this.onChangeList.bind(this);
+    this.onChangeEntry = this.onChangeEntry.bind(this);
     this.saveResume = this.saveResume.bind(this);
 
     this.state = {
@@ -129,13 +134,19 @@ class Add extends Component {
 
   addSection() {
     this.setState({
-      sections: [...this.state.sections, { name: "", items: [] }],
+      sections: [...this.state.sections, { name: "" }],
     });
   }
 
-  removeSection(i) {
-    this.state.sections.splice(i, 1);
-    this.setState({ sections: this.state.sections });
+  removeSection(sectionIdx) {
+    // const temp = [...this.state.sections];
+    // temp.splice(i, 1);
+    // this.setState({ sections: temp });
+
+    this.setState({
+      sections: this.state.sections.filter((_, i) => i !== sectionIdx),
+    });
+    console.log(this.state.sections);
   }
 
   onChangeSectionName(i, e) {
@@ -146,6 +157,7 @@ class Add extends Component {
 
   addItem(sectionIdx, eventKey) {
     // console.log(eventKey);
+
     document.querySelector(".addItemBtn").style.display = "none";
 
     this.setState((prevState) => {
@@ -154,21 +166,80 @@ class Add extends Component {
         sections: [...prevState.sections],
       };
 
-      temp.sections[sectionIdx].items = [
-        ...temp.sections[sectionIdx].items,
-        { type: eventKey },
-      ];
+      if (temp.sections[sectionIdx].data === undefined) {
+        temp.sections[sectionIdx] = {
+          ...temp.sections[sectionIdx],
+          type: eventKey,
+          data: [""],
+        };
+      } else {
+        temp.sections[sectionIdx] = {
+          ...temp.sections[sectionIdx],
+          type: eventKey,
+          data: [...temp.sections[sectionIdx].data, ""],
+        };
+      }
+
+      // console.log(temp);
 
       return temp;
     });
   }
 
-  deleteItem(sectionIdx, itemIdx) {
-    if (this.state.sections[sectionIdx].items.length === 1) {
+  removeItem(sectionIdx, dataIdx) {
+    if (this.state.sections[sectionIdx].data.length === 1) {
       document.querySelector(".addItemBtn").style.display = "inline-block";
     }
-    this.state.sections[sectionIdx].items.splice(itemIdx, 1);
+    this.state.sections[sectionIdx].data.splice(dataIdx, 1);
     this.setState({ sections: this.state.sections });
+  }
+
+  onChangeText(sectionIdx, e) {
+    this.setState((prevState) => {
+      const temp = {
+        ...prevState,
+        sections: [...prevState.sections],
+      };
+
+      temp.sections[sectionIdx].data = [e.target.value];
+
+      // temp.sections[sectionIdx].items.data[dataIdx] = ""
+      //   ...temp.sections[sectionIdx].item.data[data],
+      //   data: e.target.value,
+      // ];
+
+      return temp;
+    });
+    // console.log(this.sections[sectionIdx].items[itemIdx]);
+  }
+
+  onChangeList(sectionIdx, dataIdx, e) {
+    this.setState((prevState) => {
+      const temp = {
+        ...prevState,
+        sections: [...prevState.sections],
+      };
+      temp.sections[sectionIdx].data = [...temp.sections[sectionIdx].data];
+      temp.sections[sectionIdx].data[dataIdx] = e.target.value;
+
+      return temp;
+    });
+  }
+
+  onChangeEntry(sectionIdx, dataIdx, e) {
+    this.setState((prevState) => {
+      const temp = {
+        ...prevState,
+        sections: [...prevState.sections],
+      };
+      temp.sections[sectionIdx].data = [...temp.sections[sectionIdx].data];
+      temp.sections[sectionIdx].data[dataIdx] = {
+        ...temp.sections[sectionIdx].data[dataIdx],
+        [e.target.name]: e.target.value,
+      };
+
+      return temp;
+    });
   }
 
   saveResume() {
@@ -184,6 +255,8 @@ class Add extends Component {
       sections: this.state.sections,
       user: getCurrentUser(),
     };
+
+    // console.log(data);
 
     const requestOptions = {
       method: "POST",
@@ -429,187 +502,85 @@ class Add extends Component {
                   </Button>
                 </Col>
               </Row>
-              {Object.keys(this.state.sections[index].items).map(
-                (key, itemIdx) =>
-                  this.state.sections[index].items[itemIdx].type === "entry" ? (
-                    <div key={itemIdx}>
-                      <div>
-                        <Row className="mb-3">
-                          <Form.Group as={Col}>
-                            <Form.Label>
-                              Job title, school, activity name, etc
-                            </Form.Label>
-                            <Form.Control type="text" />
-                          </Form.Group>
-
-                          <Form.Group as={Col}>
-                            <Form.Label>
-                              Employer, degree, organization, etc
-                            </Form.Label>
-                            <Form.Control type="text" />
-                          </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                          <Col xs={3}>
+              {this.state.sections[index].data &&
+                Object.keys(this.state.sections[index].data).map(
+                  (key, dataIdx) =>
+                    this.state.sections[index].type === "entry" ? (
+                      <div key={dataIdx}>
+                        <div>
+                          <Row className="mb-3">
                             <Form.Group as={Col}>
-                              <Form.Label>Start Date</Form.Label>
-                              <Form.Control type="date" />
+                              <Form.Label>
+                                Job title, school, activity name, etc
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="title"
+                                onChange={(e) =>
+                                  this.onChangeEntry(index, dataIdx, e)
+                                }
+                              />
                             </Form.Group>
-                          </Col>
-                          <Col xs={3}>
+
                             <Form.Group as={Col}>
-                              <Form.Label>End Date</Form.Label>
-                              <Form.Control type="date" />
+                              <Form.Label>
+                                Employer, degree, organization, etc
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="detail"
+                                onChange={(e) =>
+                                  this.onChangeEntry(index, dataIdx, e)
+                                }
+                              />
                             </Form.Group>
-                          </Col>
-                          <Form.Group as={Col}>
-                            <Form.Label>Location</Form.Label>
-                            <Form.Control type="text" />
-                          </Form.Group>
-                        </Row>
-                        <Form.Label>Description</Form.Label>
-                        <textarea
-                          as={Col}
-                          className="form-control mb-3"
-                          name="text"
-                          rows="3"
-                        ></textarea>
-                      </div>
-                      <div className="col">
-                        <Button
-                          className="mb-3"
-                          style={{
-                            display: "inline-block",
-                          }}
-                          variant="outline-danger"
-                          onClick={() => this.deleteItem(index, itemIdx)}
-                        >
-                          -
-                        </Button>
-                        {itemIdx ===
-                          this.state.sections[index].items.length - 1 && (
-                          <Button
-                            className="mb-3"
-                            style={{
-                              display: "inline-block",
-                            }}
-                            variant="outline-primary"
-                            onClick={() => this.addItem(index, "entry")}
-                          >
-                            +
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ) : this.state.sections[index].items[itemIdx].type ===
-                    "list" ? (
-                    <div className="input-group mb-3 w-50" key={itemIdx}>
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">&#8226;</span>
-                      </div>
-                      <Form.Control
-                        type="text"
-                        className="mb-3"
-                        placeholder="Enter list item"
-                        style={{
-                          width: "20%",
-                          minWidth: "300px",
-                          display: "inline-block",
-                        }}
-                      ></Form.Control>
-                      <div className="input-group-append">
-                        <Button
-                          style={{
-                            display: "inline-block",
-                          }}
-                          variant="outline-danger"
-                          onClick={() => this.deleteItem(index, itemIdx)}
-                        >
-                          -
-                        </Button>
-                      </div>
-
-                      {itemIdx ===
-                        this.state.sections[index].items.length - 1 && (
-                        <div className="input-group-append">
-                          <Button
-                            style={{
-                              display: "inline-block",
-                            }}
-                            variant="outline-primary"
-                            onClick={() => this.addItem(index, "list")}
-                          >
-                            +
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  ) : this.state.sections[index].items[itemIdx].type ===
-                    "tags" ? (
-                    <div
-                      className="input-group w-25"
-                      key={itemIdx}
-                      style={{ float: "left" }}
-                    >
-                      <Form.Control
-                        type="text"
-                        className="mb-3"
-                        placeholder="Enter tag"
-                        style={{
-                          width: "10%",
-                          minWidth: "100px",
-                          display: "inline-block",
-                        }}
-                      ></Form.Control>
-                      <div className="input-group-append">
-                        <Button
-                          style={{
-                            display: "inline-block",
-                          }}
-                          variant="outline-danger"
-                          onClick={() => this.deleteItem(index, itemIdx)}
-                        >
-                          -
-                        </Button>
-                      </div>
-
-                      {itemIdx ===
-                        this.state.sections[index].items.length - 1 && (
-                        <div className="input-group-append">
-                          <Button
-                            style={{
-                              display: "inline-block",
-                            }}
-                            variant="outline-primary"
-                            onClick={() => this.addItem(index, "tags")}
-                          >
-                            +
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  ) : this.state.sections[index].items[itemIdx].type ===
-                    "pair" ? (
-                    <div className="input-group" key={itemIdx}>
-                      <div className="row">
-                        <div className="col">
-                          <Form.Control
-                            type="text"
-                            class="mb-3"
-                            placeholder="Enter name"
-                            aria-label="name"
-                            style={{ width: "200px" }}
-                          ></Form.Control>
-                        </div>
-                        :
-                        <div className="col">
-                          <Form.Control
-                            type="text"
-                            class="mb-3"
-                            placeholder="Enter value"
-                            aria-label="value"
-                            style={{ width: "600px" }}
-                          ></Form.Control>
+                          </Row>
+                          <Row className="mb-3">
+                            <Col xs={3}>
+                              <Form.Group as={Col}>
+                                <Form.Label>Start Date</Form.Label>
+                                <Form.Control
+                                  type="date"
+                                  name="startDate"
+                                  onChange={(e) =>
+                                    this.onChangeEntry(index, dataIdx, e)
+                                  }
+                                />
+                              </Form.Group>
+                            </Col>
+                            <Col xs={3}>
+                              <Form.Group as={Col}>
+                                <Form.Label>End Date</Form.Label>
+                                <Form.Control
+                                  type="date"
+                                  name="endDate"
+                                  onChange={(e) =>
+                                    this.onChangeEntry(index, dataIdx, e)
+                                  }
+                                />
+                              </Form.Group>
+                            </Col>
+                            <Form.Group as={Col}>
+                              <Form.Label>Location</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="location"
+                                onChange={(e) =>
+                                  this.onChangeEntry(index, dataIdx, e)
+                                }
+                              />
+                            </Form.Group>
+                          </Row>
+                          <Form.Label>Description</Form.Label>
+                          <textarea
+                            as={Col}
+                            className="form-control mb-3"
+                            rows="3"
+                            name="description"
+                            onChange={(e) =>
+                              this.onChangeEntry(index, dataIdx, e)
+                            }
+                          ></textarea>
                         </div>
                         <div className="col">
                           <Button
@@ -618,50 +589,192 @@ class Add extends Component {
                               display: "inline-block",
                             }}
                             variant="outline-danger"
-                            onClick={() => this.deleteItem(index, itemIdx)}
+                            onClick={() => this.removeItem(index, dataIdx)}
                           >
                             -
                           </Button>
+                          {dataIdx ===
+                            this.state.sections[index].data.length - 1 && (
+                            <Button
+                              className="mb-3"
+                              style={{
+                                display: "inline-block",
+                              }}
+                              variant="outline-primary"
+                              onClick={() => this.addItem(index, "entry")}
+                            >
+                              +
+                            </Button>
+                          )}
                         </div>
                       </div>
-
-                      {itemIdx ===
-                        this.state.sections[index].items.length - 1 && (
+                    ) : this.state.sections[index].type === "list" ? (
+                      <div className="input-group mb-3 w-50" key={dataIdx}>
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">&#8226;</span>
+                        </div>
+                        <Form.Control
+                          type="text"
+                          className="mb-3"
+                          placeholder="Enter list item"
+                          style={{
+                            width: "20%",
+                            minWidth: "300px",
+                            display: "inline-block",
+                          }}
+                          onChange={(e) => this.onChangeList(index, dataIdx, e)}
+                        ></Form.Control>
                         <div className="input-group-append">
                           <Button
                             style={{
                               display: "inline-block",
                             }}
-                            variant="outline-primary"
-                            onClick={() => this.addItem(index, "pair")}
+                            variant="outline-danger"
+                            onClick={() => this.removeItem(index, dataIdx)}
                           >
-                            +
+                            -
                           </Button>
                         </div>
-                      )}
-                    </div>
-                  ) : this.state.sections[index].items[itemIdx].type ===
-                    "text" ? (
-                    <div>
-                      <textarea
-                        className="form-control mb-3"
-                        name="text"
-                        rows="3"
-                        placeholder="Enter text"
-                        key={itemIdx}
-                      ></textarea>
-                      <Button
-                        style={{
-                          display: "inline-block",
-                        }}
-                        variant="outline-danger"
-                        onClick={() => this.deleteItem(index, itemIdx)}
+
+                        {dataIdx ===
+                          this.state.sections[index].data.length - 1 && (
+                          <div className="input-group-append">
+                            <Button
+                              style={{
+                                display: "inline-block",
+                              }}
+                              variant="outline-primary"
+                              onClick={() => this.addItem(index, "list")}
+                            >
+                              +
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ) : this.state.sections[index].type === "tags" ? (
+                      <div
+                        className="input-group w-25"
+                        key={dataIdx}
+                        style={{ float: "left" }}
                       >
-                        -
-                      </Button>
-                    </div>
-                  ) : null
-              )}
+                        <Form.Control
+                          type="text"
+                          className="mb-3"
+                          placeholder="Enter tag"
+                          style={{
+                            width: "10%",
+                            minWidth: "100px",
+                            display: "inline-block",
+                          }}
+                          onChange={(e) => this.onChangeList(index, dataIdx, e)}
+                        ></Form.Control>
+                        <div className="input-group-append">
+                          <Button
+                            style={{
+                              display: "inline-block",
+                            }}
+                            variant="outline-danger"
+                            onClick={() => this.removeItem(index, dataIdx)}
+                          >
+                            -
+                          </Button>
+                        </div>
+
+                        {dataIdx ===
+                          this.state.sections[index].data.length - 1 && (
+                          <div className="input-group-append">
+                            <Button
+                              style={{
+                                display: "inline-block",
+                              }}
+                              variant="outline-primary"
+                              onClick={() => this.addItem(index, "tags")}
+                            >
+                              +
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ) : this.state.sections[index].type === "pair" ? (
+                      <div className="input-group" key={dataIdx}>
+                        <div className="row">
+                          <div className="col">
+                            <Form.Control
+                              type="text"
+                              className="mb-3"
+                              placeholder="Enter name"
+                              name="name"
+                              aria-label="name"
+                              style={{ width: "200px" }}
+                              onChange={(e) =>
+                                this.onChangeEntry(index, dataIdx, e)
+                              }
+                            ></Form.Control>
+                          </div>
+                          :
+                          <div className="col">
+                            <Form.Control
+                              type="text"
+                              className="mb-3"
+                              placeholder="Enter value"
+                              name="value"
+                              aria-label="value"
+                              style={{ width: "600px" }}
+                              onChange={(e) =>
+                                this.onChangeEntry(index, dataIdx, e)
+                              }
+                            ></Form.Control>
+                          </div>
+                          <div className="col">
+                            <Button
+                              className="mb-3"
+                              style={{
+                                display: "inline-block",
+                              }}
+                              variant="outline-danger"
+                              onClick={() => this.removeItem(index, dataIdx)}
+                            >
+                              -
+                            </Button>
+                          </div>
+                        </div>
+
+                        {dataIdx ===
+                          this.state.sections[index].data.length - 1 && (
+                          <div className="input-group-append">
+                            <Button
+                              style={{
+                                display: "inline-block",
+                              }}
+                              variant="outline-primary"
+                              onClick={() => this.addItem(index, "pair")}
+                            >
+                              +
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ) : this.state.sections[index].type === "text" ? (
+                      <div key={dataIdx}>
+                        <textarea
+                          className="form-control mb-3"
+                          name="text"
+                          rows="3"
+                          placeholder="Enter text"
+                          onChange={(e) => this.onChangeText(index, e)}
+                        ></textarea>
+                        <Button
+                          style={{
+                            display: "inline-block",
+                          }}
+                          variant="outline-danger"
+                          onClick={() => this.removeItem(index, dataIdx)}
+                        >
+                          -
+                        </Button>
+                      </div>
+                    ) : null
+                )}
 
               <Row>
                 <Col>

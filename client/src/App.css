@@ -60,3 +60,6 @@
   text-align: center;
   /* padding-bottom: 500px; */
 }
+html {
+  scroll-behavior: smooth;
+}
