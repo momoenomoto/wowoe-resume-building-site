@@ -15,7 +15,7 @@ Shoppy Shoperson is a web app that will allow users to keep track of multiple gr
 What better way to kill time than word games? Getting tired of Wordle? Try Wowoe!
 Wowoe is a simple web-based word game that refreshes every hour with a new word or you can practice by choosing your own word. The aim of the game is to get the highest score by finding words that are most related to the word of the hour or your own chosen word. You have 5 chances to get the highest score as possible. Once you sign in, you can keep track of your hourly score trend and look at your highest record. You can also compare your record to the highest record of other players.-->
 
-Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, contact information, and sections to their resumes. Each section of the resume can be a list, a collection of tags, or text. The resume can also be translated into various languages. Past resumes can be saved and viewed as well.
+Wowoe is a web app to show off your work experience, skills, and accomplishments. Users can register and login and once they're logged in, they can create their own customized interactive resume page. They can add a photo, details, contact information, and sections to their resumes. Each section of the resume can be an entry with date, a list, a collection of tags, a name value pair, or simply text. Past resumes can be saved and viewed as well. Users can choose which resume they want to publish, and published resumes can be viewed by everyone on the Network page or with a user's username.
 
 ## Data Model
 
@@ -88,20 +88,22 @@ An Example CurrentGame Document:
 
 The application will store Users, Resumes, and Sections.
 
-- each user will have their own resume page (via a reference)
-- a resume page can have multiple sections (via references)
+- each user will have multiple resumes and one published resume (via references)
+- each resume is also references a user
+- a resume page can have multiple sections (via embedding)
 - each section will have a different type and data associated with it
+- the data type can be entry, list, tags, pair, or text
+- each data type has its own schema which is implemented through mongoose discriminators
 
 An Example User:
 
 ```javascript
 {
-  username: "momoe",
-  hash: // a password hash
-  email: // email during creation
-  lastVisited: // date of last visit
-  published: // id of currently published resume
-  resumes:[] // an array of resume object IDs
+  username: String,
+  password: String// a password hash
+  email: String// email during creation
+  published: ObjectId// id of currently published resume
+  resumes:[ObjectId] // an array of resume object IDs
 }
 ```
 
@@ -109,17 +111,18 @@ An Example Resume:
 
 ```javascript
 {
-  _id: // id of resume
-  name: // name of resume
-  first: "" // first name
-  last: "" // last name
-  title: "" // title
-  photo: // link to photo
-  email: ["mn2668@nyu.edu", "momoe.nomoto.mn@gmail.com"],
-  phone: [9178160261],
-  loc: "New York, NY",
-  lastEdited: // date of last edit
-  sections: [] // an Array of references to different sections
+  user: ObjectId // author of resume
+  resumetitle: String// name of resume
+  name: String // full name
+  title: String // job title
+  photo: String// base64 photo
+  email: String // email
+  phone: String //phone number
+  loc: String, // location
+  details: [{name: String, value: String}] // array of objects
+  sections: [SectionSchema] // an array of section schemas
+  createdAt: Date// date of creation
+  updatedAt: Date// date of last update
 }
 ```
 
@@ -127,20 +130,9 @@ An Example Section:
 
 ```javascript
 {
-  _id: // id of section
-  name: // name of section
-  subsections: [] // Array of embedded subsections
-  data: // string of data
-}
-```
-
-An Example SubSection:
-
-```javascript
-{
-  name: // name of subsection
-  type: // list, tags, or text
-  data: // data that will be shown
+  name: String // name of section
+  type: String // type of section: entry, list, tags, pair, text
+  data: [Schema depending on type] // array of data with schema determined by type
 }
 ```
 
@@ -228,14 +220,16 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 -->
 
 1. as a non-registered user, I can register a new account with the site
-2. as a non-registered user, I can view someone else's resume with their link.
-3. as a user, I can log in to the site
-4. as a user, I can start my own resume
-5. as a user, I can add sections to my resume
-6. as a user, I can add data to my sections
-7. as a user, I can choose the type of my section
-8. as a user, I can also view other resumes
-9. as a user, I can translate my resume into another language
+2. as a non-registered user, I can view someone else's published resume with their username.
+3. as a non-registered user, I can view the network page listing everyone's published resumes.
+4. as a non-registered user, I can filter the network page to find a user.
+5. as a user, I can log in to the site
+6. as a user, I can build my own resume
+7. as a user, I can add sections to my resume
+8. as a user, I can choose the section types
+9. as a user, I can add data to my sections
+10. as a user, I can also view other past resumes
+11. as a user, I can filter my resumes based on the name
 
 ## Research Topics
 
@@ -255,14 +249,13 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 10 points total out of 8 required points (___TODO__: addtional points will __not__ count for extra credit)
 -->
 
-- (1 points) Use external API
-  - One to translate all text to another language
 - (2 points) Use a CSS framework such as Bootstrap
   - To make the user interface nice
 - (6 points) Front-end framework React.js
   - To allow front-end resume editing experience smooth
+- (2 points) Use client-side JavaScript libraries or modules
 
-9 points total out of 8 required points
+10 points total out of 10 required points
 
 ## [Link to Initial Main Project File](server/src/app.mjs)
 
@@ -272,7 +265,10 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 (**TODO**: list any tutorials/references/etc. that you've based your code off of)
 
+1. [React](https://reactjs.org/docs/getting-started.html)
+2. [Bootstrap](https://getbootstrap.com/docs/5.2/getting-started/introduction/)
+3. [React Bootstrap](https://react-bootstrap.github.io/forms/overview/)
 <!--
-1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
-2. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this)
--->
+4. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
+5. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this)
+   -->
