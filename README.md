@@ -263,7 +263,7 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 ## Annotations / References Used
 
-(**TODO**: list any tutorials/references/etc. that you've based your code off of)
+<!-- (**TODO**: list any tutorials/references/etc. that you've based your code off of) -->
 
 1. [React](https://reactjs.org/docs/getting-started.html)
 2. [Bootstrap](https://getbootstrap.com/docs/5.2/getting-started/introduction/)
