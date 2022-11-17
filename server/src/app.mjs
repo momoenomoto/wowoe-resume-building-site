@@ -114,11 +114,12 @@ app.get("/resumes", (req, res) => {
         });
       else {
         Resume.find({
-          user: user,
+          user: mongoose.Types.ObjectId(user._id),
           resumetitle: { $regex: resumetitle, $options: "i" },
         })
           .sort("-updatedAt")
           .exec((err, resumes) => {
+            // console.log(resumes);
             res.json({
               // user: req.session.user,
               resumes: resumes,
