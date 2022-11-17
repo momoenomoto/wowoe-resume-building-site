@@ -107,17 +107,25 @@ app.get("/resumes", (req, res) => {
   //     });
   //   });
   else {
-    Resume.find({
-      user: user._id,
-      resumetitle: { $regex: resumetitle, $options: "i" },
-    })
-      .sort("-updatedAt")
-      .exec((err, resumes) => {
-        res.json({
-          // user: req.session.user,
-          resumes: resumes,
+    User.findOne({ username: user.username }).exec((err, user) => {
+      if (err)
+        res.status(500).json({
+          message: err.message,
         });
-      });
+      else {
+        Resume.find({
+          user: user,
+          resumetitle: { $regex: resumetitle, $options: "i" },
+        })
+          .sort("-updatedAt")
+          .exec((err, resumes) => {
+            res.json({
+              // user: req.session.user,
+              resumes: resumes,
+            });
+          });
+      }
+    });
   }
 });
 
