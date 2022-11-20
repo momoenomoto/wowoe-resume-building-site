@@ -25,9 +25,7 @@ class Resume extends Component {
   }
 
   componentDidMount() {
-    const currentUser = getCurrentUser();
-
-    if (!currentUser) this.setState({ redirect: "/" });
+    if (!document.referrer) this.setState({ redirect: "/" });
     else this.getResume(this.props.router.params.id);
   }
 

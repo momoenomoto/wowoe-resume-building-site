@@ -349,18 +349,18 @@ class AllResumes extends Component {
                         }}
                       >
                         {this.state.publishedResumeId === resume.id ? (
-                          <div class="form-check form-switch">
+                          <div className="form-check form-switch">
                             <input
-                              class="form-check-input"
+                              className="form-check-input"
                               type="checkbox"
                               id="flexSwitchCheckChecked"
                               role="switch"
-                              onClick={() => this.unsetPublishedResume()}
+                              onChange={() => this.unsetPublishedResume()}
                               checked
                             />
                             <label
-                              class="form-check-label"
-                              for="flexSwitchCheckChecked"
+                              className="form-check-label"
+                              htmlFor="flexSwitchCheckChecked"
                             >
                               Publish
                             </label>
@@ -371,7 +371,7 @@ class AllResumes extends Component {
                               type="switch"
                               id="custom-switch"
                               label="Publish"
-                              onClick={() => this.setPublishedResume(resume)}
+                              onChange={() => this.setPublishedResume(resume)}
                               // checked
                             />
                           </Form>

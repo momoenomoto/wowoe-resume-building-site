@@ -63,3 +63,11 @@
 html {
   scroll-behavior: smooth;
 }
+
+a.network-link {
+  color: black;
+}
+
+a.network-link:hover {
+  color: grey;
+}

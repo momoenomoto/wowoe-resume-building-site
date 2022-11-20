@@ -19,7 +19,7 @@ export default class Network extends Component {
   }
 
   componentDidMount() {
-    fetch(getBaseURL() + "/", { mode: "cors" })
+    fetch(getBaseURL() + "/network", { mode: "cors" })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -27,7 +27,7 @@ export default class Network extends Component {
       })
       .then((data) => {
         this.setState({
-          message: data.message,
+          users: data.users,
         });
         console.log(data);
       })
@@ -60,6 +60,7 @@ export default class Network extends Component {
             // top: "76px",
             // maxWidth: "100%",
             // height: "auto",
+            minWidth: "800px",
             width: "100%",
             backgroundSize: "cover",
             // left: "-90px",
@@ -169,6 +170,69 @@ export default class Network extends Component {
             </div>
           </div>
         </div>
+        {this.state.users
+          ? this.state.users.map((user, index) => (
+              <div
+                className="d-inline-block"
+                style={{ overflow: "auto", width: "50%", margin: "0 auto" }}
+                key={index}
+              >
+                {user.published.photo ? (
+                  <a href={"/resume/" + user.published.id}>
+                    <img
+                      className="photo"
+                      src={user.published.photo}
+                      width="80"
+                      height="80"
+                      alt=""
+                      style={{
+                        borderRadius: "50%",
+                        maxHeight: "200px",
+                        display: "inline-block",
+                        float: "left",
+                        margin: "20px",
+                      }}
+                    />
+                  </a>
+                ) : (
+                  <a href={"/resume/" + user.published.id}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="80"
+                      height="80"
+                      fill="currentColor"
+                      className="bi bi-person-circle"
+                      viewBox="0 0 16 16"
+                      style={{
+                        color: "lightgray",
+                        display: "inline-block",
+                        margin: "20px",
+                        float: "left",
+                      }}
+                    >
+                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                      <path
+                        fillRule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                      />
+                    </svg>
+                  </a>
+                )}
+                <div style={{ float: "left" }}>
+                  <a
+                    href={"/resume/" + user.published.id}
+                    style={{ textDecoration: "none" }}
+                    className="network-link"
+                  >
+                    <h3 style={{ paddingTop: "30px" }}>
+                      {user.published.name}
+                    </h3>
+                  </a>
+                  <p>{user.published.title}</p>
+                </div>
+              </div>
+            ))
+          : null}
       </div>
     );
   }

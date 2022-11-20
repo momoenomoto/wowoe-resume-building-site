@@ -220,6 +220,21 @@ app.get("/resume/:id", (req, res) => {
     });
 });
 
+app.get("/network", (req, res) => {
+  User.find({ published: { $ne: null } })
+    .populate("published")
+    .select("username published")
+    .exec((err, users) => {
+      if (err) {
+        res.status(500).json({
+          message: err.message,
+        });
+      } else {
+        res.json({ users });
+      }
+    });
+});
+
 app.post("/register", (req, res) => {
   // setup callbacks for register success and error
   function success(newUser) {
