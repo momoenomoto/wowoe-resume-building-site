@@ -21,6 +21,7 @@ class AllResumes extends Component {
       currentResume: null,
       currentIndex: -1,
       search: "",
+      publishedResumeId: null,
       hover: false,
       redirect: false,
     };
@@ -34,7 +35,9 @@ class AllResumes extends Component {
     const currentUser = getCurrentUser();
 
     if (!currentUser) this.setState({ redirect: "/" });
-    else this.retrieveResumes();
+    else {
+      this.retrieveResumes();
+    }
   }
 
   handleMouseEnter = () => {
@@ -65,6 +68,7 @@ class AllResumes extends Component {
       .then((data) => {
         this.setState({
           resumes: data.resumes,
+          publishedResumeId: data.published,
         });
         // console.log(data);
       })
@@ -88,6 +92,61 @@ class AllResumes extends Component {
     });
   }
 
+  setPublishedResume(resume) {
+    // console.log(resume.id);
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", mode: "cors" },
+      body: JSON.stringify({
+        published: resume.id,
+        user: getCurrentUser(),
+      }),
+    };
+
+    fetch(getBaseURL() + "/resumes", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        this.setState({
+          publishedResumeId: resume.id,
+        });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  unsetPublishedResume() {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", mode: "cors" },
+      body: JSON.stringify({
+        published: undefined,
+        user: getCurrentUser(),
+      }),
+    };
+
+    fetch(getBaseURL() + "/resumes", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        this.setState({
+          publishedResumeId: null,
+        });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
   // removeAllResumes() {
   //   DataService.deleteAll()
   //     .then((response) => {
@@ -190,7 +249,12 @@ class AllResumes extends Component {
                       (index === this.state.currentIndex ? "selected" : "")
                     }
                     key={index}
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      border:
+                        this.state.publishedResumeId === resume.id &&
+                        "2px solid red",
+                    }}
                     onClick={() => this.setActiveResume(resume, index)}
                   >
                     <img
@@ -228,6 +292,24 @@ class AllResumes extends Component {
                       )}
                     </div>
                   </figure>
+                  {this.state.publishedResumeId === resume.id ? (
+                    <div
+                      className="text-center"
+                      style={{
+                        position: "absolute",
+                        // textAlign: "center",
+                        marginLeft: "27px",
+
+                        color: "red",
+                        marginTop: "-240px",
+                        fontWeight: "bold",
+                        transform: "rotate(-45deg)",
+                        fontSize: "2em",
+                      }}
+                    >
+                      Published
+                    </div>
+                  ) : null}
                   {index === this.state.currentIndex ? (
                     <div
                       className="resumeButtons text-center"
@@ -266,14 +348,34 @@ class AllResumes extends Component {
                           marginTop: "-340px",
                         }}
                       >
-                        <Form>
-                          <Form.Check
-                            type="switch"
-                            id="custom-switch"
-                            label="Publish"
-                            // checked
-                          />
-                        </Form>
+                        {this.state.publishedResumeId === resume.id ? (
+                          <div class="form-check form-switch">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="flexSwitchCheckChecked"
+                              role="switch"
+                              onClick={() => this.unsetPublishedResume()}
+                              checked
+                            />
+                            <label
+                              class="form-check-label"
+                              for="flexSwitchCheckChecked"
+                            >
+                              Publish
+                            </label>
+                          </div>
+                        ) : (
+                          <Form>
+                            <Form.Check
+                              type="switch"
+                              id="custom-switch"
+                              label="Publish"
+                              onClick={() => this.setPublishedResume(resume)}
+                              // checked
+                            />
+                          </Form>
+                        )}
                       </div>
                     </div>
                   ) : (

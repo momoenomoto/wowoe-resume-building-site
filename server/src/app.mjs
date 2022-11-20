@@ -93,6 +93,7 @@ app.get("/resumes", (req, res) => {
         else
           res.json({
             // user: req.session.user,
+            published: user.published,
             resumes: user.resumes,
           });
       });
@@ -121,12 +122,47 @@ app.get("/resumes", (req, res) => {
           .exec((err, resumes) => {
             // console.log(resumes);
             res.json({
+              published: user.published,
               // user: req.session.user,
               resumes: resumes,
             });
           });
       }
     });
+  }
+});
+
+app.post("/resumes", (req, res) => {
+  if (req.body.published !== undefined) {
+    User.findOneAndUpdate(
+      { username: req.body.user.username },
+      { published: mongoose.Types.ObjectId(req.body.published) },
+      function (err) {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          // console.log(savedResume);
+          res.status(200).json({ message: "success" });
+        }
+      }
+    );
+  } else {
+    User.findOneAndUpdate(
+      { username: req.body.user.username },
+      { published: null },
+      function (err) {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          // console.log(savedResume);
+          res.status(200).json({ message: "success" });
+        }
+      }
+    );
   }
 });
 
