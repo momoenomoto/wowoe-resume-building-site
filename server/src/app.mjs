@@ -220,6 +220,24 @@ app.get("/resume/:id", (req, res) => {
     });
 });
 
+app.get("/user/:username", (req, res) => {
+  const username = req.params.username;
+  User.findOne({ username })
+    .populate("published")
+    .then((data) => {
+      if (!data)
+        res
+          .status(404)
+          .json({ message: "Not found user with username " + username });
+      else res.json({ published: data.published });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "Error retrieving resume with username " + username });
+    });
+});
+
 app.get("/network", (req, res) => {
   User.find({ published: { $ne: null } })
     .populate("published")

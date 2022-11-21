@@ -6,7 +6,8 @@ import { Navigate } from "react-router-dom";
 class Resume extends Component {
   constructor(props) {
     super(props);
-    this.getResume = this.getResume.bind(this);
+    this.getResumeById = this.getResumeById.bind(this);
+    this.getResumeByUsername = this.getResumeByUsername.bind(this);
 
     this.state = {
       currentResume: {
@@ -25,11 +26,33 @@ class Resume extends Component {
   }
 
   componentDidMount() {
-    if (!document.referrer) this.setState({ redirect: "/" });
-    else this.getResume(this.props.router.params.id);
+    if (this.props.router.params.username !== undefined)
+      this.getResumeByUsername(this.props.router.params.username);
+    else if (!document.referrer) this.setState({ redirect: "/" });
+    else this.getResumeById(this.props.router.params.id);
   }
 
-  getResume(id) {
+  getResumeByUsername(username) {
+    fetch(getBaseURL() + "/user/" + username, { mode: "cors" })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        // console.log(data);
+        this.setState({
+          currentResume: data.published,
+        });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        this.props.router.navigate("/network");
+        window.location.reload();
+      });
+  }
+
+  getResumeById(id) {
     fetch(getBaseURL() + "/resume/" + id, { mode: "cors" })
       .then((response) => {
         if (response.ok) return response.json();

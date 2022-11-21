@@ -120,7 +120,9 @@ class App extends Component {
             <Route path="/auth" element={<Auth />} />
             <Route path="/resume/add" element={<Add />} />
             <Route path="/resume/:id" element={<Resume />} />
-            <Route path="*" element={<Network />} />
+            <Route path="/network" element={<Network />} />
+            <Route path="/user/:username" element={<Resume />} />
+            {/* <Route path="*" element={<Network />} /> */}
           </Routes>
         </div>
       </div>

@@ -29,7 +29,7 @@ export default class Network extends Component {
         this.setState({
           users: data.users,
         });
-        console.log(data);
+        // console.log(data);
       })
       .catch((e) => {
         console.log(e);

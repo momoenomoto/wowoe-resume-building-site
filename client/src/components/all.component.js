@@ -14,6 +14,9 @@ class AllResumes extends Component {
     this.refreshResumes = this.refreshResumes.bind(this);
     this.setActiveResume = this.setActiveResume.bind(this);
     //this.removeAllResumes = this.removeAllResumes.bind(this);
+    this.unsetPublishedResume = this.unsetPublishedResume.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.search = this.search.bind(this);
 
     this.state = {
