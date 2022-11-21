@@ -97,17 +97,7 @@ app.get("/resumes", (req, res) => {
             resumes: user.resumes,
           });
       });
-  }
-  // Resume.find({ user: user._id })
-  //   .sort("-updatedAt")
-  //   .exec((err, resumes) => {
-  //     // console.log(req.session.user);
-  //     res.json({
-  //       // user: req.session.user,
-  //       resumes: resumes,
-  //     });
-  //   });
-  else {
+  } else {
     User.findOne({ username: user.username }).exec((err, user) => {
       if (err)
         res.status(500).json({
@@ -238,19 +228,39 @@ app.get("/user/:username", (req, res) => {
     });
 });
 
-app.get("/network", (req, res) => {
-  User.find({ published: { $ne: null } })
-    .populate("published")
-    .select("username published")
-    .exec((err, users) => {
-      if (err) {
-        res.status(500).json({
-          message: err.message,
-        });
-      } else {
-        res.json({ users });
-      }
+app.get("/network", async (req, res) => {
+  const name = req.query.name ?? "";
+  if (name === "") {
+    User.find({ published: { $ne: null } })
+      .populate("published")
+      .select("username published")
+      .exec((err, users) => {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          res.json({ users });
+        }
+      });
+  } else {
+    const resumeIds = await Resume.find({
+      name: { $regex: name, $options: "i" },
     });
+    const resumeIdArray = resumeIds.map((resume) => resume.id);
+
+    User.find({ published: { $in: resumeIdArray } })
+      .populate("published")
+      .exec((err, users) => {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          res.json({ users });
+        }
+      });
+  }
 });
 
 app.post("/register", (req, res) => {

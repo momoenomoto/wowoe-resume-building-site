@@ -8,6 +8,7 @@ export default class Network extends Component {
     super(props);
     this.onChangeSearch = this.onChangeSearch.bind(this);
     this.executeScroll = this.executeScroll.bind(this);
+    this.search = this.search.bind(this);
 
     this.networkRef = React.createRef();
 
@@ -48,6 +49,26 @@ export default class Network extends Component {
     this.networkRef.current.scrollIntoView(true);
   }
 
+  search() {
+    fetch(getBaseURL() + `/network?name=${this.state.search}`, {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          users: data.users,
+        });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
   render() {
     return (
       <div style={{ position: "relative" }}>
@@ -71,7 +92,7 @@ export default class Network extends Component {
           className="intro"
           style={{
             position: "absolute",
-            top: "25%",
+            top: "200px",
             left: "50%",
             transform: "translate(-50%, -50%)",
             // marginTop: "500px",
@@ -93,7 +114,7 @@ export default class Network extends Component {
         <span
           style={{
             position: "absolute",
-            top: "50%",
+            top: "350px",
             left: "50%",
             transform: "translate(-50%, -50%)",
             color: "white",
