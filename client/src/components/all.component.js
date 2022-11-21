@@ -13,11 +13,11 @@ class AllResumes extends Component {
     this.retrieveResumes = this.retrieveResumes.bind(this);
     this.refreshResumes = this.refreshResumes.bind(this);
     this.setActiveResume = this.setActiveResume.bind(this);
-    //this.removeAllResumes = this.removeAllResumes.bind(this);
     this.unsetPublishedResume = this.unsetPublishedResume.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.search = this.search.bind(this);
+    this.removeResume = this.removeResume.bind(this);
 
     this.state = {
       resumes: [],
@@ -144,6 +144,34 @@ class AllResumes extends Component {
         this.setState({
           publishedResumeId: null,
         });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  removeResume(resumeId) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", mode: "cors" },
+      body: JSON.stringify({
+        resumeId,
+        user: getCurrentUser(),
+      }),
+    };
+
+    fetch(getBaseURL() + "/resumes", requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        this.setState({
+          published: data.published,
+        });
+        window.location.reload();
         // console.log(data);
       })
       .catch((e) => {
@@ -337,9 +365,9 @@ class AllResumes extends Component {
                         Edit
                       </Button>{" "}
                       <Button
-                        href={"/resume/" + resume.id}
                         variant="danger"
                         size="sm"
+                        onClick={() => this.removeResume(resume.id)}
                       >
                         Remove
                       </Button>{" "}

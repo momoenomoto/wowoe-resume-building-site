@@ -156,6 +156,36 @@ app.post("/resumes", (req, res) => {
   }
 });
 
+app.delete("/resumes", (req, res) => {
+  User.findOne({ username: req.body.user.username }, (err, user) => {
+    if (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    } else {
+      user.resumes.splice(user.resumes.indexOf(req.body.resumeId), 1);
+      if (user.published.toString() === req.body.resumeId) {
+        user.published = null;
+      }
+      user.save((err) => {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          Resume.deleteOne({
+            id: mongoose.Types.ObjectId(req.body.resumeId),
+          }).then(
+            res.json({
+              published: user.published,
+            })
+          );
+        }
+      });
+    }
+  });
+});
+
 app.post("/resume/add", (req, res) => {
   // console.log(req.body.sections[0].items[0]);
   const resume = new Resume({
