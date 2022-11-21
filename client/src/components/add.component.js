@@ -158,7 +158,8 @@ class Add extends Component {
   addItem(sectionIdx, eventKey) {
     // console.log(eventKey);
 
-    document.querySelector(".addItemBtn").style.display = "none";
+    const buttons = document.querySelectorAll(".addItemBtn");
+    for (let i = 0; i < buttons.length; i++) buttons[i].style.display = "none";
 
     this.setState((prevState) => {
       const temp = {

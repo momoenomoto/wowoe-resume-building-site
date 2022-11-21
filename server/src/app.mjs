@@ -231,7 +231,10 @@ app.get("/resume/:id", (req, res) => {
     .then((data) => {
       if (!data)
         res.status(404).json({ message: "Not found resume with id " + id });
-      else res.json(data);
+      else {
+        console.log(data);
+        res.json(data);
+      }
     })
     .catch((err) => {
       res

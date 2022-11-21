@@ -199,7 +199,7 @@ export default class Network extends Component {
                 key={index}
               >
                 {user.published.photo ? (
-                  <a href={"/resume/" + user.published.id}>
+                  <a href={"/user/" + user.username}>
                     <img
                       className="photo"
                       src={user.published.photo}
@@ -216,7 +216,7 @@ export default class Network extends Component {
                     />
                   </a>
                 ) : (
-                  <a href={"/resume/" + user.published.id}>
+                  <a href={"/user/" + user.username}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="80"
@@ -241,7 +241,7 @@ export default class Network extends Component {
                 )}
                 <div style={{ float: "left" }}>
                   <a
-                    href={"/resume/" + user.published.id}
+                    href={"/user/" + user.username}
                     style={{ textDecoration: "none" }}
                     className="network-link"
                   >

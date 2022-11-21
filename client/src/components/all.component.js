@@ -282,9 +282,6 @@ class AllResumes extends Component {
                     key={index}
                     style={{
                       cursor: "pointer",
-                      border:
-                        this.state.publishedResumeId === resume.id &&
-                        "2px solid red",
                     }}
                     onClick={() => this.setActiveResume(resume, index)}
                   >
