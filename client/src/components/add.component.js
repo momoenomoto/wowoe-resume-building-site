@@ -57,7 +57,7 @@ class Add extends Component {
     if (!currentUser) this.setState({ redirect: "/" });
     else if (this.props.router.params.id !== undefined) {
       this.getResumeById(this.props.router.params.id);
-      this.state.addMode = false;
+      this.setState({ addMode: false });
     }
   }
 
