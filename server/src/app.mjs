@@ -187,42 +187,70 @@ app.delete("/resumes", (req, res) => {
 });
 
 app.post("/resume/add", (req, res) => {
-  // console.log(req.body.sections[0].items[0]);
-  const resume = new Resume({
-    user: req.body.user._id,
-    resumetitle: req.body.resumetitle,
-    name: req.body.name,
-    title: req.body.title,
-    photo: req.body.photo,
-    email: req.body.email,
-    phone: req.body.phone,
-    loc: req.body.loc,
-    details: req.body.details,
-    sections: req.body.sections,
-  });
-  console.log(resume);
-  resume.save((err, savedResume) => {
-    if (err) {
-      res.status(500).json({
-        message: err.message,
-      });
-    } else {
-      User.findOneAndUpdate(
-        { username: req.body.user.username },
-        { $push: { resumes: savedResume._id } },
-        function (err) {
-          if (err) {
-            res.status(500).json({
-              message: err.message,
-            });
-          } else {
-            // console.log(savedResume);
-            res.json(savedResume);
-          }
+  if (req.params.id !== undefined) {
+    Resume.findOneAndUpdate(
+      { id: mongoose.Types.ObjectId(req.params.id) },
+      {
+        resumetitle: req.body.resumetitle,
+        name: req.body.name,
+        title: req.body.title,
+        photo: req.body.photo,
+        email: req.body.email,
+        phone: req.body.phone,
+        loc: req.body.loc,
+        details: req.body.details,
+        sections: req.body.sections,
+      },
+      // update
+      (err, savedResume) => {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          // console.log(savedResume);
+          res.json(savedResume);
         }
-      );
-    }
-  });
+      }
+    );
+  } else {
+    // console.log(req.body.sections[0].items[0]);
+    const resume = new Resume({
+      user: req.body.user._id,
+      resumetitle: req.body.resumetitle,
+      name: req.body.name,
+      title: req.body.title,
+      photo: req.body.photo,
+      email: req.body.email,
+      phone: req.body.phone,
+      loc: req.body.loc,
+      details: req.body.details,
+      sections: req.body.sections,
+    });
+    console.log(resume);
+    resume.save((err, savedResume) => {
+      if (err) {
+        res.status(500).json({
+          message: err.message,
+        });
+      } else {
+        User.findOneAndUpdate(
+          { username: req.body.user.username },
+          { $push: { resumes: savedResume._id } },
+          function (err) {
+            if (err) {
+              res.status(500).json({
+                message: err.message,
+              });
+            } else {
+              // console.log(savedResume);
+              res.json(savedResume);
+            }
+          }
+        );
+      }
+    });
+  }
 });
 
 app.get("/resume/:id", (req, res) => {

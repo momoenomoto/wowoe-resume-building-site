@@ -47,6 +47,7 @@ class Add extends Component {
       //published: false,
       submitted: false,
       redirect: false,
+      addMode: true,
     };
   }
 
@@ -54,6 +55,35 @@ class Add extends Component {
     const currentUser = getCurrentUser();
 
     if (!currentUser) this.setState({ redirect: "/" });
+    else if (this.props.router.params.id !== undefined) {
+      this.getResumeById(this.props.router.params.id);
+      this.state.addMode = false;
+    }
+  }
+
+  getResumeById(id) {
+    fetch(getBaseURL() + "/resume/" + id, { mode: "cors" })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error(response.statusText);
+      })
+      .then((data) => {
+        this.setState({
+          resumetitle: data.resumetitle,
+          name: data.name,
+          title: data.title,
+          photo: data.photo,
+          email: data.email,
+          phone: data.phone,
+          loc: data.loc,
+          details: data.details,
+          sections: data.sections,
+        });
+        // console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   convertToBase64(file) {
@@ -134,7 +164,7 @@ class Add extends Component {
 
   addSection() {
     this.setState({
-      sections: [...this.state.sections, { name: "" }],
+      sections: [...this.state.sections, { name: "", data: [] }],
     });
   }
 
@@ -146,7 +176,7 @@ class Add extends Component {
     this.setState({
       sections: this.state.sections.filter((_, i) => i !== sectionIdx),
     });
-    console.log(this.state.sections);
+    // console.log(this.state.sections);
   }
 
   onChangeSectionName(i, e) {
@@ -244,18 +274,35 @@ class Add extends Component {
   }
 
   saveResume() {
-    const data = {
-      resumetitle: this.state.resumetitle,
-      name: this.state.name,
-      title: this.state.title,
-      photo: this.state.photo,
-      email: this.state.email,
-      phone: this.state.phone,
-      loc: this.state.loc,
-      details: this.state.details,
-      sections: this.state.sections,
-      user: getCurrentUser(),
-    };
+    let data;
+    if (this.state.addMode) {
+      data = {
+        resumetitle: this.state.resumetitle,
+        name: this.state.name,
+        title: this.state.title,
+        photo: this.state.photo,
+        email: this.state.email,
+        phone: this.state.phone,
+        loc: this.state.loc,
+        details: this.state.details,
+        sections: this.state.sections,
+        user: getCurrentUser(),
+      };
+    } else {
+      data = {
+        id: this.props.router.params.id,
+        resumetitle: this.state.resumetitle,
+        name: this.state.name,
+        title: this.state.title,
+        photo: this.state.photo,
+        email: this.state.email,
+        phone: this.state.phone,
+        loc: this.state.loc,
+        details: this.state.details,
+        sections: this.state.sections,
+        user: getCurrentUser(),
+      };
+    }
 
     // console.log(data);
 
@@ -315,6 +362,7 @@ class Add extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter resume title"
+                  value={this.state.resumetitle || ""}
                   required
                   onChange={this.onChangeResumeTitle}
                 />
@@ -334,6 +382,7 @@ class Add extends Component {
                 <Form.Control
                   type="text"
                   required
+                  value={this.state.name || ""}
                   onChange={this.onChangeName}
                 />
               </Form.Group>
@@ -347,6 +396,7 @@ class Add extends Component {
                   <img
                     className="photo"
                     src={this.state.photo}
+                    value={this.state.photo || ""}
                     alt=""
                     style={{
                       borderRadius: "50%",
@@ -405,24 +455,40 @@ class Add extends Component {
             <Col md={5}>
               <Form.Group controlId="formGridJobTitle">
                 <Form.Label>Job Title</Form.Label>
-                <Form.Control type="text" onChange={this.onChangeTitle} />
+                <Form.Control
+                  type="text"
+                  value={this.state.title || ""}
+                  onChange={this.onChangeTitle}
+                />
               </Form.Group>
             </Col>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridEmail">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="text" onChange={this.onChangeEmail} />
+              <Form.Control
+                type="text"
+                value={this.state.email || ""}
+                onChange={this.onChangeEmail}
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridPhone">
               <Form.Label>Phone Number</Form.Label>
-              <Form.Control type="text" onChange={this.onChangePhone} />
+              <Form.Control
+                type="text"
+                value={this.state.phone || ""}
+                onChange={this.onChangePhone}
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridLoc">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" onChange={this.onChangeLoc} />
+              <Form.Control
+                type="text"
+                value={this.state.loc || ""}
+                onChange={this.onChangeLoc}
+              />
             </Form.Group>
           </Row>
           {this.state.details.map((element, index) => (
@@ -433,7 +499,7 @@ class Add extends Component {
                     type="text"
                     name="name"
                     placeholder="Name"
-                    // value={element.name || ""}
+                    value={this.state.details[index].name || ""}
                     onChange={(e) => this.onChangeDetail(index, e)}
                   />
                 </Col>
@@ -442,7 +508,7 @@ class Add extends Component {
                     type="text"
                     name="value"
                     placeholder="Value"
-                    // value={element.value || ""}
+                    value={this.state.details[index].value || ""}
                     onChange={(e) => this.onChangeDetail(index, e)}
                   />
                 </Col>
@@ -480,6 +546,7 @@ class Add extends Component {
                     name="name"
                     placeholder="Section Name"
                     // value={element.name || ""}
+                    value={this.state.sections[index].name || ""}
                     onChange={(e) => this.onChangeSectionName(index, e)}
                   />
                 </Col>
@@ -517,6 +584,10 @@ class Add extends Component {
                               <Form.Control
                                 type="text"
                                 name="title"
+                                value={
+                                  this.state.sections[index].data[dataIdx]
+                                    .title || ""
+                                }
                                 onChange={(e) =>
                                   this.onChangeEntry(index, dataIdx, e)
                                 }
@@ -530,6 +601,10 @@ class Add extends Component {
                               <Form.Control
                                 type="text"
                                 name="detail"
+                                value={
+                                  this.state.sections[index].data[dataIdx]
+                                    .detail || ""
+                                }
                                 onChange={(e) =>
                                   this.onChangeEntry(index, dataIdx, e)
                                 }
@@ -543,6 +618,10 @@ class Add extends Component {
                                 <Form.Control
                                   type="date"
                                   name="startDate"
+                                  value={
+                                    this.state.sections[index].data[dataIdx]
+                                      .startDate || ""
+                                  }
                                   onChange={(e) =>
                                     this.onChangeEntry(index, dataIdx, e)
                                   }
@@ -555,6 +634,10 @@ class Add extends Component {
                                 <Form.Control
                                   type="date"
                                   name="endDate"
+                                  value={
+                                    this.state.sections[index].data[dataIdx]
+                                      .endDate || ""
+                                  }
                                   onChange={(e) =>
                                     this.onChangeEntry(index, dataIdx, e)
                                   }
@@ -566,6 +649,10 @@ class Add extends Component {
                               <Form.Control
                                 type="text"
                                 name="location"
+                                value={
+                                  this.state.sections[index].data[dataIdx]
+                                    .location || ""
+                                }
                                 onChange={(e) =>
                                   this.onChangeEntry(index, dataIdx, e)
                                 }
@@ -578,6 +665,10 @@ class Add extends Component {
                             className="form-control mb-3"
                             rows="3"
                             name="description"
+                            value={
+                              this.state.sections[index].data[dataIdx]
+                                .description || ""
+                            }
                             onChange={(e) =>
                               this.onChangeEntry(index, dataIdx, e)
                             }
@@ -618,6 +709,7 @@ class Add extends Component {
                           type="text"
                           className="mb-3"
                           placeholder="Enter list item"
+                          value={this.state.sections[index].data[dataIdx] || ""}
                           style={{
                             width: "20%",
                             minWidth: "300px",
@@ -667,6 +759,7 @@ class Add extends Component {
                             minWidth: "100px",
                             display: "inline-block",
                           }}
+                          value={this.state.sections[index].data[dataIdx] || ""}
                           onChange={(e) => this.onChangeList(index, dataIdx, e)}
                         ></Form.Control>
                         <div className="input-group-append">
@@ -707,6 +800,10 @@ class Add extends Component {
                               name="name"
                               aria-label="name"
                               style={{ width: "200px" }}
+                              value={
+                                this.state.sections[index].data[dataIdx].name ||
+                                ""
+                              }
                               onChange={(e) =>
                                 this.onChangeEntry(index, dataIdx, e)
                               }
@@ -721,6 +818,10 @@ class Add extends Component {
                               name="value"
                               aria-label="value"
                               style={{ width: "600px" }}
+                              value={
+                                this.state.sections[index].data[dataIdx]
+                                  .value || ""
+                              }
                               onChange={(e) =>
                                 this.onChangeEntry(index, dataIdx, e)
                               }
@@ -762,6 +863,7 @@ class Add extends Component {
                           name="text"
                           rows="3"
                           placeholder="Enter text"
+                          value={this.state.sections[index].data || ""}
                           onChange={(e) => this.onChangeText(index, e)}
                         ></textarea>
                         <Button
@@ -777,42 +879,30 @@ class Add extends Component {
                     ) : null
                 )}
 
-              <Row>
-                <Col>
-                  <DropdownButton
-                    className="addItemBtn"
-                    title="Add an item"
-                    onSelect={(eventKey) => this.addItem(index, eventKey)}
-                    variant="secondary"
-                  >
-                    <Dropdown.Item eventKey="entry">
-                      Entry with Date, Loc, and Description
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="list">List</Dropdown.Item>
-                    <Dropdown.Item eventKey="tags">
-                      Collection of Tags
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="pair">
-                      Name Value Pair
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="text">Text Field</Dropdown.Item>
-                  </DropdownButton>
-                  {/*     
-                  <Form.Select
-                    aria-label="type"
-                    onChange={(e) => this.onChangeSubsectionType(index, e)}
-                  >
-                    <option value="">Choose a type for your subsection</option>
-                    <option value="entry">
-                      Entry with Date, Loc, and Description
-                    </option>
-                    <option value="list"> + List</option>
-                    <option value="tags"> + Collection of Tags</option>
-                    <option value="pair"> + Name Value Pair</option>
-                    <option value="text"> + Text Field</option>
-                  </Form.Select> */}
-                </Col>
-              </Row>
+              {this.state.sections[index].data.length ? null : (
+                <Row>
+                  <Col>
+                    <DropdownButton
+                      className="addItemBtn"
+                      title="Add an item"
+                      onSelect={(eventKey) => this.addItem(index, eventKey)}
+                      variant="secondary"
+                    >
+                      <Dropdown.Item eventKey="entry">
+                        Entry with Date, Loc, and Description
+                      </Dropdown.Item>
+                      <Dropdown.Item eventKey="list">List</Dropdown.Item>
+                      <Dropdown.Item eventKey="tags">
+                        Collection of Tags
+                      </Dropdown.Item>
+                      <Dropdown.Item eventKey="pair">
+                        Name Value Pair
+                      </Dropdown.Item>
+                      <Dropdown.Item eventKey="text">Text Field</Dropdown.Item>
+                    </DropdownButton>
+                  </Col>
+                </Row>
+              )}
               <div style={{ clear: "left" }}>
                 <hr />
               </div>

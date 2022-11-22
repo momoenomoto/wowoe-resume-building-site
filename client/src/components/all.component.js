@@ -354,11 +354,7 @@ class AllResumes extends Component {
                       >
                         View
                       </Button>{" "}
-                      <Button
-                        href={"/resume/" + resume.id}
-                        variant="warning"
-                        size="sm"
-                      >
+                      <Button href={"/resume/edit/" + resume.id} variant="warning" size="sm">
                         Edit
                       </Button>{" "}
                       <Button
