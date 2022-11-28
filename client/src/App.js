@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { React, useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -10,29 +10,20 @@ import Network from "./components/network.component.js";
 import logo from "./img/wowoe-logo.png";
 import { getBaseURL, getCurrentUser } from "./http.js";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.logOut = this.logOut.bind(this);
+export default function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showMyResumes, setShowMyResumes] = useState(false);
 
-    this.state = {
-      currentUser: null,
-      showMyResumes: false,
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     const user = getCurrentUser();
 
     if (user) {
-      this.setState({
-        currentUser: user,
-        showMyResumes: true,
-      });
+      setCurrentUser(user);
+      setShowMyResumes(true);
     }
-  }
+  }, []);
 
-  logOut() {
+  function logOut() {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json", mode: "cors" },
@@ -41,94 +32,82 @@ class App extends Component {
     };
     fetch(getBaseURL() + "/logout", requestOptions).then(() => {
       // console.log("test");
-      this.setState({
-        currentUser: null,
-        showMyResumes: false,
-      });
+      setCurrentUser(null);
+      setShowMyResumes(false);
+
       localStorage.removeItem("user");
       // this.props.router.navigate("/");
       // window.location.reload();
     });
   }
 
-  render() {
-    return (
-      <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/" className="navbar-brand">
-            <img
-              className="block"
-              alt="logo"
-              src={logo}
-              width="50"
-              style={{ position: "relative", left: "10px" }}
-            />
-          </a>
-          <div className="navbar-nav mr-auto">
+  return (
+    <>
+      <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <a href="/" className="navbar-brand">
+          <img
+            className="block"
+            alt="logo"
+            src={logo}
+            width="50"
+            style={{ position: "relative", left: "10px" }}
+          />
+        </a>
+        <div className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <Link to={"/network"} className="nav-link">
+              Network
+            </Link>
+          </li>
+          {showMyResumes && (
             <li className="nav-item">
-              <Link to={"/network"} className="nav-link">
-                Network
+              <Link to={"/resumes"} className="nav-link">
+                My Resumes
               </Link>
             </li>
-            {this.state.showMyResumes && (
+          )}
+        </div>
+        <div className="navbar-nav ms-auto">
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link to={"/resumes"} className="nav-link">
-                  My Resumes
+                <div className="nav-link">{currentUser.username}</div>
+              </li>
+              <li className="nav-item" style={{ border: "1px solid gray" }}>
+                <Link to={"/"} className="nav-link" onClick={logOut}>
+                  Logout
                 </Link>
               </li>
-            )}
-          </div>
-          <div className="navbar-nav ms-auto">
-            {this.state.currentUser ? (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <div className="nav-link">
-                    {this.state.currentUser.username}
-                  </div>
-                </li>
-                <li className="nav-item" style={{ border: "1px solid gray" }}>
-                  <Link to={"/"} className="nav-link" onClick={this.logOut}>
-                    Logout
-                  </Link>
-                </li>
-              </div>
-            ) : (
-              <li className="nav-login">
-                <Link to={"/auth"} className="nav-link">
-                  <button
-                    className="btn btn-outline-success mr-auto my-2 my-sm-0"
-                    type="button"
-                  >
-                    Login | Register
-                  </button>
-                </Link>
-              </li>
-            )}
-            ;
-          </div>
-          {/* <li className="nav-item">
+            </div>
+          ) : (
+            <li className="nav-login">
+              <Link to={"/auth"} className="nav-link">
+                <button
+                  className="btn btn-outline-success mr-auto my-2 my-sm-0"
+                  type="button"
+                >
+                  Login | Register
+                </button>
+              </Link>
+            </li>
+          )}
+          ;
+        </div>
+        {/* <li className="nav-item">
               <Link to={"/add"} className="nav-link">
                 Add
               </Link>
             </li> */}
-        </nav>
+      </nav>
 
-        <div className="container mt-3">
-          <Routes>
-            <Route path="/" element={<Network />} />
-            <Route path="/resumes" element={<AllResumes />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/resume/add" element={<Add />} />
-            <Route path="/resume/:id" element={<Resume />} />
-            <Route path="/network" element={<Network />} />
-            <Route path="/user/:username" element={<Resume />} />
-            <Route path="/resume/edit/:id" element={<Add />} />
-            {/* <Route path="*" element={<Network />} /> */}
-          </Routes>
-        </div>
-      </div>
-    );
-  }
+      <Routes>
+        <Route path="/resumes" element={<AllResumes />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/network" element={<Network />} />
+        <Route path="/user/:username" element={<Resume />} />
+        <Route path="/resume/edit/:id" element={<Add />} />
+        <Route path="/" element={<Network />} />
+      </Routes>
+    </>
+  );
 }
-
-export default App;
