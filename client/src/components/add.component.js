@@ -133,9 +133,11 @@ export default function Add() {
 
   function addItem(sectionIdx, eventKey) {
     // console.log(eventKey);
-
-    const buttons = document.querySelectorAll(".addItemBtn");
-    for (let i = 0; i < buttons.length; i++) buttons[i].style.display = "none";
+    if (sections[sectionIdx].data.length > 1) {
+      const buttons = document.querySelectorAll(".addItemBtn" + sectionIdx);
+      for (let i = 0; i < buttons.length; i++)
+        buttons[i].style.display = "none";
+    }
 
     setSections((prev) => {
       const temp = [...prev];
@@ -162,7 +164,7 @@ export default function Add() {
 
   function removeItem(sectionIdx, dataIdx) {
     if (sections[sectionIdx].data.length === 1) {
-      const buttons = document.querySelectorAll(".addItemBtn");
+      const buttons = document.querySelectorAll(".addItemBtn" + sectionIdx);
       for (let i = 0; i < buttons.length; i++)
         buttons[i].style.display = "inline-block";
     }
@@ -767,7 +769,7 @@ export default function Add() {
               <Row>
                 <Col>
                   <DropdownButton
-                    className="addItemBtn"
+                    className={"addItemBtn" + index}
                     title="Add an item"
                     onSelect={(eventKey) => addItem(index, eventKey)}
                     variant="secondary"
