@@ -110,7 +110,7 @@ app.get("/resumes", (req, res) => {
         })
           .sort("-updatedAt")
           .exec((err, resumes) => {
-            // console.log(resumes);
+            console.log(resumes);
             res.json({
               published: user.published,
               // user: req.session.user,
@@ -186,7 +186,7 @@ app.delete("/resumes", (req, res) => {
   });
 });
 
-app.post("/resume/add", (req, res) => {
+app.post("/resume/add", async (req, res) => {
   if (req.params.id !== undefined) {
     Resume.findOneAndUpdate(
       { id: mongoose.Types.ObjectId(req.params.id) },
@@ -215,8 +215,9 @@ app.post("/resume/add", (req, res) => {
     );
   } else {
     // console.log(req.body.sections[0].items[0]);
+    const userId = await User.findOne({ username: req.body.user.username });
     const resume = new Resume({
-      user: req.body.user._id,
+      user: userId,
       resumetitle: req.body.resumetitle,
       name: req.body.name,
       title: req.body.title,

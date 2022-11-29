@@ -20,31 +20,31 @@ export default function AllResumes() {
     else {
       retrieveResumes();
     }
-  });
+
+    function retrieveResumes() {
+      fetch(getBaseURL() + "/resumes", {
+        mode: "cors",
+        headers: new Headers({ user: JSON.stringify(getCurrentUser()) }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else throw new Error(response.statusText);
+        })
+        .then((data) => {
+          setResumes(data.resumes);
+          setPublishedResumeId(data.published);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [navigate]);
 
   function onChangeSearch(e) {
     const search = e.target.value;
 
     setSearch(search);
-  }
-
-  function retrieveResumes() {
-    fetch(getBaseURL() + "/resumes", {
-      mode: "cors",
-      headers: new Headers({ user: JSON.stringify(getCurrentUser()) }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else throw new Error(response.statusText);
-      })
-      .then((data) => {
-        setResumes(data.resumes);
-        setPublishedResumeId(data.published);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
   }
 
   function setActiveResume(resume, index) {
@@ -137,8 +137,8 @@ export default function AllResumes() {
         else throw new Error(response.statusText);
       })
       .then((data) => {
+        console.log(data);
         setResumes(data.resumes);
-        // console.log(data);
       })
       .catch((e) => {
         console.log(e);
