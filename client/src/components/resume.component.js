@@ -23,40 +23,40 @@ export default function Resume() {
     if (username !== undefined) getResumeByUsername(username);
     else if (!document.referrer) navigate("/");
     else getResumeById(id);
-  }, []);
 
-  function getResumeByUsername(username) {
-    fetch(getBaseURL() + "/user/" + username, { mode: "cors" })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else throw new Error(response.statusText);
-      })
-      .then((data) => {
-        // console.log(data);
-        setCurrentResume(data.published);
-        // console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-        navigate("/network");
-        window.location.reload();
-      });
-  }
+    function getResumeByUsername(username) {
+      fetch(getBaseURL() + "/user/" + username, { mode: "cors" })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else throw new Error(response.statusText);
+        })
+        .then((data) => {
+          // console.log(data);
+          setCurrentResume(data.published);
+          // console.log(data);
+        })
+        .catch((e) => {
+          console.log(e);
+          navigate("/network");
+          window.location.reload();
+        });
+    }
 
-  function getResumeById(id) {
-    fetch(getBaseURL() + "/resume/" + id, { mode: "cors" })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else throw new Error(response.statusText);
-      })
-      .then((data) => {
-        setCurrentResume(data);
-        // console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
+    function getResumeById(id) {
+      fetch(getBaseURL() + "/resume/" + id, { mode: "cors" })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else throw new Error(response.statusText);
+        })
+        .then((data) => {
+          setCurrentResume(data);
+          // console.log(data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [id, navigate, username]);
 
   return (
     <>
