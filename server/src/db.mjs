@@ -93,11 +93,13 @@ const ResumeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-ResumeSchema.method("toJSON", function () {
-  const { __v, _id, ...object } = this.toObject();
-  object.id = _id;
-  return object;
-});
+// ResumeSchema.method("toJSON", function () {
+//   const { __v, _id, ...object } = this.toObject();
+//   object.id = _id;
+//   return object;
+// });
+
+
 
 ResumeSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=resumetitle%>" });
 UserSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=username%>" });

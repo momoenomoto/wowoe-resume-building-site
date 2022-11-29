@@ -56,7 +56,7 @@ export default function AllResumes() {
       method: "POST",
       headers: { "Content-Type": "application/json", mode: "cors" },
       body: JSON.stringify({
-        published: resume.id,
+        published: resume._id,
         user: getCurrentUser(),
       }),
     };
@@ -68,7 +68,7 @@ export default function AllResumes() {
         } else throw new Error(response.statusText);
       })
       .then((data) => {
-        setPublishedResumeId(resume.id);
+        setPublishedResumeId(resume._id);
         // console.log(data);
       })
       .catch((e) => {
@@ -118,7 +118,7 @@ export default function AllResumes() {
         } else throw new Error(response.statusText);
       })
       .then((data) => {
-        setPublishedResume(data.published);
+        setPublishedResumeId(data.published);
         window.location.reload();
         // console.log(data);
       })
@@ -137,7 +137,6 @@ export default function AllResumes() {
         else throw new Error(response.statusText);
       })
       .then((data) => {
-        console.log(data);
         setResumes(data.resumes);
       })
       .catch((e) => {
@@ -153,7 +152,7 @@ export default function AllResumes() {
             <h2>My Resumes</h2>
           </div>
           <div className="col-md-3 col-12">
-            <div className="input-group mb-3">
+            <div className="input-group mb-3" style={{ width: "300px" }}>
               <input
                 type="text"
                 className="form-control"
@@ -253,7 +252,7 @@ export default function AllResumes() {
                       )}
                     </div>
                   </figure>
-                  {publishedResumeId === resume.id ? (
+                  {publishedResumeId === resume._id ? (
                     <div
                       className="text-center"
                       style={{
@@ -281,14 +280,14 @@ export default function AllResumes() {
                       }}
                     >
                       <Button
-                        href={"/resume/" + resume.id}
+                        href={"/resume/" + resume._id}
                         variant="info"
                         size="sm"
                       >
                         View
                       </Button>{" "}
                       <Button
-                        href={"/resume/edit/" + resume.id}
+                        href={"/resume/edit/" + resume._id}
                         variant="warning"
                         size="sm"
                       >
@@ -297,7 +296,7 @@ export default function AllResumes() {
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => removeResume(resume.id)}
+                        onClick={() => removeResume(resume._id)}
                       >
                         Remove
                       </Button>{" "}
@@ -309,7 +308,7 @@ export default function AllResumes() {
                           marginTop: "-340px",
                         }}
                       >
-                        {publishedResumeId === resume.id ? (
+                        {publishedResumeId === resume._id ? (
                           <div className="form-check form-switch">
                             <input
                               className="form-check-input"

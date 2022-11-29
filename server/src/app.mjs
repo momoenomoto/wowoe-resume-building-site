@@ -164,7 +164,11 @@ app.delete("/resumes", (req, res) => {
       });
     } else {
       user.resumes.splice(user.resumes.indexOf(req.body.resumeId), 1);
-      if (user.published.toString() === req.body.resumeId) {
+      if (
+        user.published !== undefined &&
+        user.published &&
+        user.published.toString() === req.body.resumeId
+      ) {
         user.published = null;
       }
       user.save((err) => {
@@ -174,7 +178,7 @@ app.delete("/resumes", (req, res) => {
           });
         } else {
           Resume.deleteOne({
-            id: mongoose.Types.ObjectId(req.body.resumeId),
+            _id: mongoose.Types.ObjectId(req.body.resumeId),
           }).then(
             res.json({
               published: user.published,
@@ -187,9 +191,9 @@ app.delete("/resumes", (req, res) => {
 });
 
 app.post("/resume/add", async (req, res) => {
-  if (req.params.id !== undefined) {
+  if (req.body.id !== undefined) {
     Resume.findOneAndUpdate(
-      { id: mongoose.Types.ObjectId(req.params.id) },
+      { _id: mongoose.Types.ObjectId(req.body.id) },
       {
         resumetitle: req.body.resumetitle,
         name: req.body.name,
