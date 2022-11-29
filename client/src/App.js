@@ -93,11 +93,6 @@ export default function App() {
           )}
           ;
         </div>
-        {/* <li className="nav-item">
-              <Link to={"/add"} className="nav-link">
-                Add
-              </Link>
-            </li> */}
       </nav>
 
       <Routes>
