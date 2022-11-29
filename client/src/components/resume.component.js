@@ -60,7 +60,7 @@ export default function Resume() {
 
   return (
     <>
-      <div style={{ marginTop: "20px", marginLeft: "50px" }}>
+      <div style={{ margin: "20px 50px", marginBottom: "50px" }}>
         <h1 style={{ fontWeight: "bold", display: "inline-block" }}>
           {currentResume.name}
         </h1>{" "}

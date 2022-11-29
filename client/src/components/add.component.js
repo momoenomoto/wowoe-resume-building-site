@@ -20,7 +20,6 @@ export default function Add() {
   const [loc, setLoc] = useState("");
   const [details, setDetails] = useState([]);
   const [sections, setSections] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
   const [addMode, setAddMode] = useState(true);
 
   const { id } = useParams();
@@ -86,7 +85,7 @@ export default function Add() {
   async function onChangePhoto(e) {
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
-    setPhone(base64);
+    setPhoto(base64);
   }
 
   function onChangeEmail(e) {
@@ -263,7 +262,6 @@ export default function Add() {
         setLoc(data.loc);
         setDetails(data.details);
         setSections(data.sections);
-        setSubmitted(true);
         navigate("/resumes");
         window.location.reload();
       })
