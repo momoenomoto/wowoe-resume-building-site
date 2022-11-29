@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getBaseURL, getCurrentUser } from "../http.js";
 import icon from "../img/resume_icon.jpg";
-// import { withRouter } from "../with-router";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -147,7 +146,7 @@ export default function AllResumes() {
   }
 
   return (
-    <div className="container">
+    <>
       <div className="row" style={{ marginTop: "20px" }}>
         <div className="col-sm-2 col-12">
           <h2>My Resumes</h2>
@@ -343,6 +342,6 @@ export default function AllResumes() {
             ))
           : ""}
       </div>
-    </div>
+    </>
   );
 }

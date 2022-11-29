@@ -1,59 +1,52 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { getBaseURL } from "../http.js";
-import { withRouter } from "../with-router";
+import { useNavigate } from "react-router-dom";
 
-class Auth extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.register = this.register.bind(this);
-    this.login = this.login.bind(this);
-    this.handleValidation = this.handleValidation.bind(this);
+export default function Auth() {
+  const [formValues, setFormValues] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [formValidity, setFormValidity] = useState({
+    username: false,
+    email: false,
+    password: false,
+  });
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    this.state = {
-      formValues: {
-        username: "",
-        email: "",
-        password: "",
-      },
-      formErrors: {
-        username: "",
-        email: "",
-        password: "",
-      },
-      formValidity: {
-        username: false,
-        email: false,
-        password: false,
-      },
-      message: "",
-      isSubmitting: false,
-    };
+  const navigate = useNavigate();
+
+  function handleChangeLogin({ target }) {
+    setFormValues((prev) => {
+      formValues[target.name] = target.value;
+      return { ...prev, formValues };
+    });
   }
 
-  handleChangeLogin = ({ target }) => {
-    const { formValues } = this.state;
-    formValues[target.name] = target.value;
-    this.setState({ formValues });
-  };
+  function handleChangeRegister({ target }) {
+    setFormValues((prev) => {
+      formValues[target.name] = target.value;
+      return { ...prev, formValues };
+    });
+    handleValidation(target);
+  }
 
-  handleChange = ({ target }) => {
-    const { formValues } = this.state;
-    formValues[target.name] = target.value;
-    this.setState({ formValues });
-    this.handleValidation(target);
-  };
-
-  handleValidation = (target) => {
+  function handleValidation(target) {
     const { name, value } = target;
-    const fieldValidationErrors = this.state.formErrors;
-    const validity = this.state.formValidity;
+    const fieldValidationErrors = formErrors;
+    const validity = formValidity;
     const isUsername = name === "username";
     const isEmail = name === "email";
     const isPassword = name === "password";
@@ -84,20 +77,15 @@ class Auth extends Component {
           : `${name} should be between 8 and 40 characters`;
       }
     }
-    this.setState({
-      formErrors: fieldValidationErrors,
-      formValidity: validity,
-    });
-  };
+    setFormErrors(fieldValidationErrors);
+    setFormValidity(validity);
+  }
 
-  login(evt) {
+  function login(evt) {
     evt.preventDefault();
 
-    this.setState({
-      isSubmitting: true,
-      message: "",
-    });
-    const { formValues } = this.state;
+    setIsSubmitting(true);
+    setMessage("");
 
     const data = {
       username: formValues.username,
@@ -118,40 +106,31 @@ class Auth extends Component {
       .then((data) => {
         // console.log(data);
         if (data.user) {
-          this.setState({
-            isSubmitting: false,
-          });
+          setIsSubmitting(false);
           localStorage.setItem(
             "user",
             JSON.stringify({ username: data.user.username })
           );
-          this.props.router.navigate("/resumes");
+          navigate("/resumes");
           window.location.reload();
         } else {
-          this.setState({
-            message: data.message,
-            isSubmitting: false,
-          });
+          setMessage(data.message);
+          setIsSubmitting(false);
         }
       })
       .catch((e) => {
-        this.setState({
-          isSubmitting: false,
-          message: e.message,
-        });
+        setMessage(e.message);
+        setIsSubmitting(false);
         console.log(e);
       });
   }
 
-  register(evt) {
+  function register(evt) {
     evt.preventDefault();
 
-    this.setState({
-      isSubmitting: true,
-      message: "",
-    });
+    setMessage("");
+    setIsSubmitting(true);
 
-    const { formValues, formValidity } = this.state;
     if (Object.values(formValidity).every(Boolean)) {
       // alert("Form is validated! Submitting the form...");
       const data = {
@@ -176,19 +155,16 @@ class Auth extends Component {
         })
         .then((data) => {
           // console.log(data);
-          this.setState({
-            message: data.message,
-            isSubmitting: false,
-          });
+          setMessage(data.message);
+          setIsSubmitting(false);
+
           localStorage.setItem("user", JSON.stringify(data.user));
-          this.props.router.navigate("/resumes");
+          navigate("/resumes");
           window.location.reload();
         })
         .catch((e) => {
-          this.setState({
-            isSubmitting: false,
-            message: e.message,
-          });
+          setMessage(e.message);
+          setIsSubmitting(false);
           console.log(e);
         });
     } else {
@@ -197,205 +173,191 @@ class Auth extends Component {
           name: key,
           value: formValues[key],
         };
-        this.handleValidation(target);
+        handleValidation(target);
       }
-      this.setState({ isSubmitting: false });
+      setIsSubmitting(false);
     }
   }
 
-  // onSubmit = (evt) => {
-  //   evt.preventDefault();
-  // };
-
-  render() {
-    return (
-      <Container fluid="md">
-        <div
-          style={{
-            display: "block",
-            textAlign: "center",
-          }}
+  return (
+    <>
+      <div
+        style={{
+          display: "block",
+          textAlign: "center",
+        }}
+      >
+        <Tabs
+          variant="pills"
+          defaultActiveKey="login"
+          id="auth"
+          className="mb-4 justify-content-center text-center d-flex mt-4"
         >
-          <Tabs
-            variant="pills"
-            defaultActiveKey="login"
-            id="auth"
-            className="mb-4 justify-content-center text-center d-flex"
-          >
-            <Tab eventKey="login" title="Login">
-              <div
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                }}
+          <Tab eventKey="login" title="Login">
+            <div
+              style={{
+                display: "block",
+                textAlign: "center",
+              }}
+            >
+              <Form
+                onSubmit={login}
+                style={{ display: "inline-block", width: "300px" }}
               >
-                <Form
-                  onSubmit={this.login}
-                  style={{ display: "inline-block", width: "300px" }}
+                <FloatingLabel
+                  controlId="floatingInputLogin"
+                  label="Username"
+                  className="mb-3"
+                  style={{ color: "gray" }}
                 >
-                  <FloatingLabel
-                    controlId="floatingInputLogin"
-                    label="Username"
-                    className="mb-3"
-                    style={{ color: "gray" }}
-                  >
-                    <Form.Control
-                      type="text"
-                      placeholder="Username"
-                      name="username"
-                      className={`form-control ${
-                        this.state.formErrors.username ? "is-invalid" : ""
-                      }`}
-                      onChange={this.handleChangeLogin}
-                      value={this.state.formValues.username}
-                      // required
-                    />
-                  </FloatingLabel>
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    name="username"
+                    className={`form-control ${
+                      formErrors.username ? "is-invalid" : ""
+                    }`}
+                    onChange={handleChangeLogin}
+                    value={formValues.username}
+                    // required
+                  />
+                </FloatingLabel>
 
-                  <FloatingLabel
-                    controlId="floatingPasswordLogin"
-                    label="Password"
-                    className="mb-3"
-                    style={{
-                      color: "gray",
-                    }}
-                  >
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      className={`form-control ${
-                        this.state.formErrors.password ? "is-invalid" : ""
-                      }`}
-                      onChange={this.handleChangeLogin}
-                      value={this.state.formValues.password}
-                    />
-                  </FloatingLabel>
-                  {this.state.message && (
-                    <div className="form-group">
-                      <div className="alert alert-danger" role="alert">
-                        {this.state.message}
-                      </div>
+                <FloatingLabel
+                  controlId="floatingPasswordLogin"
+                  label="Password"
+                  className="mb-3"
+                  style={{
+                    color: "gray",
+                  }}
+                >
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className={`form-control ${
+                      formErrors.password ? "is-invalid" : ""
+                    }`}
+                    onChange={handleChangeLogin}
+                    value={formValues.password}
+                  />
+                </FloatingLabel>
+                {message && (
+                  <div className="form-group">
+                    <div className="alert alert-danger" role="alert">
+                      {message}
                     </div>
-                  )}
-                  <Button
-                    variant="secondary"
-                    type="submit"
-                    style={{ width: "300px" }}
-                    disabled={this.state.isSubmitting}
-                  >
-                    {this.state.isSubmitting ? "Please wait..." : "Login"}
-                  </Button>
-                </Form>
-              </div>
-            </Tab>
-
-            <Tab eventKey="register" title="Register">
-              <div
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                }}
-              >
-                <Form
-                  style={{ display: "inline-block", width: "300px" }}
-                  onSubmit={this.register}
+                  </div>
+                )}
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  style={{ width: "300px" }}
+                  disabled={isSubmitting}
                 >
-                  <FloatingLabel
-                    controlId="floatingInput"
-                    label="Username"
-                    className="mb-3"
-                    style={{ color: "gray" }}
-                  >
-                    <Form.Control
-                      type="text"
-                      placeholder="Username"
-                      name="username"
-                      className={`form-control ${
-                        this.state.formErrors.username ? "is-invalid" : ""
-                      }`}
-                      onChange={this.handleChange}
-                      value={this.state.formValues.username}
-                      // required
-                    />
-                    {/* <Form.Text id="usernameHelpBlock" muted>
+                  {isSubmitting ? "Please wait..." : "Login"}
+                </Button>
+              </Form>
+            </div>
+          </Tab>
+
+          <Tab eventKey="register" title="Register">
+            <div
+              style={{
+                display: "block",
+                textAlign: "center",
+              }}
+            >
+              <Form
+                style={{ display: "inline-block", width: "300px" }}
+                onSubmit={register}
+              >
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label="Username"
+                  className="mb-3"
+                  style={{ color: "gray" }}
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    name="username"
+                    className={`form-control ${
+                      formErrors.username ? "is-invalid" : ""
+                    }`}
+                    onChange={handleChangeRegister}
+                    value={formValues.username}
+                    // required
+                  />
+                  {/* <Form.Text id="usernameHelpBlock" muted>
                       Username must be 8-20 characters long, containing only
                       letters, numbers, and special characters (-._)
                     </Form.Text> */}
-                    <div className="invalid-feedback">
-                      {this.state.formErrors.username}
-                    </div>
-                  </FloatingLabel>
+                  <div className="invalid-feedback">{formErrors.username}</div>
+                </FloatingLabel>
 
-                  <FloatingLabel
-                    controlId="floatingEmail"
-                    label="Email address"
-                    className="mb-3"
-                    style={{ color: "gray" }}
-                  >
-                    <Form.Control
-                      type="email"
-                      placeholder="name@example.com"
-                      name="email"
-                      className={`form-control ${
-                        this.state.formErrors.email ? "is-invalid" : ""
-                      }`}
-                      onChange={this.handleChange}
-                      value={this.state.formValues.email}
-                    />
-                    <div className="invalid-feedback">
-                      {this.state.formErrors.email}
-                    </div>
-                  </FloatingLabel>
+                <FloatingLabel
+                  controlId="floatingEmail"
+                  label="Email address"
+                  className="mb-3"
+                  style={{ color: "gray" }}
+                >
+                  <Form.Control
+                    type="email"
+                    placeholder="name@example.com"
+                    name="email"
+                    className={`form-control ${
+                      formErrors.email ? "is-invalid" : ""
+                    }`}
+                    onChange={handleChangeRegister}
+                    value={formValues.email}
+                  />
+                  <div className="invalid-feedback">{formErrors.email}</div>
+                </FloatingLabel>
 
-                  <FloatingLabel
-                    controlId="floatingPassword"
-                    label="Password"
-                    style={{ color: "gray" }}
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      className={`form-control ${
-                        this.state.formErrors.password ? "is-invalid" : ""
-                      }`}
-                      onChange={this.handleChange}
-                      value={this.state.formValues.password}
-                    />
-                    {/* <Form.Text id="passwordHelpBlock" muted>
+                <FloatingLabel
+                  controlId="floatingPassword"
+                  label="Password"
+                  style={{ color: "gray" }}
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className={`form-control ${
+                      formErrors.password ? "is-invalid" : ""
+                    }`}
+                    onChange={handleChangeRegister}
+                    value={formValues.password}
+                  />
+                  {/* <Form.Text id="passwordHelpBlock" muted>
                       Password must be 8-40 characters long
                     </Form.Text> */}
-                    <div className="invalid-feedback">
-                      {this.state.formErrors.password}
-                    </div>
-                  </FloatingLabel>
+                  <div className="invalid-feedback">{formErrors.password}</div>
+                </FloatingLabel>
 
-                  {this.state.message && (
-                    <div className="form-group">
-                      <div className="alert alert-danger" role="alert">
-                        {this.state.message}
-                      </div>
+                {message && (
+                  <div className="form-group">
+                    <div className="alert alert-danger" role="alert">
+                      {message}
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  <Button
-                    variant="secondary"
-                    type="submit"
-                    style={{ width: "300px" }}
-                    disabled={this.state.isSubmitting}
-                  >
-                    {this.state.isSubmitting ? "Please wait..." : "Register"}
-                  </Button>
-                </Form>
-              </div>
-            </Tab>
-          </Tabs>
-        </div>
-      </Container>
-    );
-  }
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  style={{ width: "300px" }}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Please wait..." : "Register"}
+                </Button>
+              </Form>
+            </div>
+          </Tab>
+        </Tabs>
+      </div>
+    </>
+  );
 }
-
-export default withRouter(Auth);
