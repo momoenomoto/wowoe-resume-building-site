@@ -125,7 +125,7 @@ export default function Network() {
         </button>
       </span>
 
-      <div style={{ marginLeft: "50px", marginTop: "20px" }}>
+      <div style={{ margin: "20px 50px" }}>
         <h1
           className="d-inline-block"
           style={{ marginRight: "30px" }}

@@ -147,7 +147,7 @@ export default function AllResumes() {
 
   return (
     <>
-      <div style={{ marginTop: "20px", marginLeft: "50px" }}>
+      <div style={{ margin: "20px 50px" }}>
         <div className="row">
           <div className="col-sm-2 col-12">
             <h2>My Resumes</h2>
@@ -203,10 +203,10 @@ export default function AllResumes() {
             </a>
           </div>
         </div>
-        <div>
+        <div className="resume-content">
           {resumes
             ? resumes.map((resume, index) => (
-                <div className="d-inline-block" key={index}>
+                <div className="resume d-inline-block" key={index}>
                   <figure
                     className={
                       "me-5 mb-5 group-item " +
