@@ -105,8 +105,11 @@ export default function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/network" element={<Network />} />
         <Route path="/user/:username" element={<Resume />} />
+        <Route path="/resume/:id" element={<Resume />} />
         <Route path="/resume/edit/:id" element={<Add />} />
+        <Route path="/resume/add" element={<Add />} />
         <Route path="/" element={<Network />} />
+        <Route path="*" element={<Network />} />
       </Routes>
     </>
   );
