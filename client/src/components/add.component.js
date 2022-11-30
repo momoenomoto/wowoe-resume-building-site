@@ -8,7 +8,6 @@ import { getBaseURL, getCurrentUser } from "../http.js";
 import { useNavigate, useParams } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-// import FileBase64 from "react-file-base64";
 
 export default function Add() {
   const [resumeTitle, setResumeTitle] = useState("");
