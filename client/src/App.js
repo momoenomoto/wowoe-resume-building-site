@@ -14,6 +14,16 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showMyResumes, setShowMyResumes] = useState(false);
 
+  const googleTranslateElementInit = () => {
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        autoDisplay: false,
+      },
+      "google_translate_element"
+    );
+  };
+
   useEffect(() => {
     const user = getCurrentUser();
 
@@ -21,6 +31,14 @@ export default function App() {
       setCurrentUser(user);
       setShowMyResumes(true);
     }
+
+    var addScript = document.createElement("script");
+    addScript.setAttribute(
+      "src",
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    );
+    document.body.appendChild(addScript);
+    window.googleTranslateElementInit = googleTranslateElementInit;
   }, []);
 
   function logOut() {
@@ -68,6 +86,7 @@ export default function App() {
           )}
         </div>
         <div className="navbar-nav ms-auto">
+          <div id="google_translate_element"></div>
           {currentUser ? (
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
