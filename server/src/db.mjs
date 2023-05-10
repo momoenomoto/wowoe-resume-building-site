@@ -99,8 +99,6 @@ const ResumeSchema = new mongoose.Schema(
 //   return object;
 // });
 
-
-
 ResumeSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=resumetitle%>" });
 UserSchema.plugin(mongooseSlugPlugin, { tmpl: "<%=username%>" });
 
